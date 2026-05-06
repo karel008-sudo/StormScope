@@ -23,6 +23,10 @@
  * Text-5     : #52525b
  */
 
+:root {
+  color-scheme: dark;
+}
+
 html, body, #root {
   height: 100%;
   margin: 0;
@@ -32,10 +36,13 @@ html, body, #root {
   text-rendering: optimizeLegibility;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   overscroll-behavior: none;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   background: #0b0b11;
+  /* Avoid horizontal scroll on iOS when content slightly overshoots safe-area */
+  overflow-x: hidden;
 }
 
 /* Prevent iOS auto-zoom on input focus */
@@ -48,10 +55,19 @@ input, select, textarea, button {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Visible focus only when keyboard navigating */
+*:focus { outline: none; }
+*:focus-visible {
+  outline: 2px solid rgba(139, 92, 246, 0.85);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
 /* Leaflet dark map polish */
 .leaflet-container {
   background: #0b0b11 !important;
   outline: none;
+  font-family: inherit;
 }
 .leaflet-control-attribution {
   background: rgba(0, 0, 0, 0.6) !important;
@@ -59,6 +75,7 @@ input, select, textarea, button {
   font-size: 9px !important;
   padding: 2px 6px !important;
   border-radius: 6px 0 0 0 !important;
+  max-width: 70vw;
 }
 .leaflet-control-attribution a { color: #a78bfa !important; }
 .leaflet-control-zoom { display: none !important; }
@@ -115,6 +132,24 @@ input, select, textarea, button {
   animation: shimmer 1.6s ease-in-out infinite;
 }
 
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .glow-breath, .skeleton { animation: none !important; }
+}
+
+/* Manual reduce-motion (settings toggle) */
+.reduce-motion *, .reduce-motion *::before, .reduce-motion *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+}
+
 /* Glass surface utilities */
 .glass {
   background: rgba(255,255,255,0.04);
@@ -137,9 +172,10 @@ input[type="range"].timeline {
   -webkit-appearance: none;
   appearance: none;
   width: 100%;
-  height: 28px;
+  height: 32px;
   background: transparent;
   outline: none;
+  touch-action: pan-y;
 }
 input[type="range"].timeline::-webkit-slider-runnable-track {
   height: 4px;
@@ -149,13 +185,13 @@ input[type="range"].timeline::-webkit-slider-runnable-track {
 input[type="range"].timeline::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   border-radius: 999px;
   background: #f8f8ff;
   border: 2px solid #8b5cf6;
   box-shadow: 0 0 0 4px rgba(139,92,246,0.18), 0 8px 20px rgba(0,0,0,0.55);
-  margin-top: -9px;
+  margin-top: -10px;
   cursor: pointer;
 }
 input[type="range"].timeline::-moz-range-track {
@@ -164,8 +200,8 @@ input[type="range"].timeline::-moz-range-track {
   border-radius: 999px;
 }
 input[type="range"].timeline::-moz-range-thumb {
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   border-radius: 999px;
   background: #f8f8ff;
   border: 2px solid #8b5cf6;
@@ -178,8 +214,9 @@ input[type="range"].opacity {
   -webkit-appearance: none;
   appearance: none;
   width: 100%;
-  height: 28px;
+  height: 32px;
   background: transparent;
+  touch-action: pan-y;
 }
 input[type="range"].opacity::-webkit-slider-runnable-track {
   height: 4px;
@@ -189,12 +226,13 @@ input[type="range"].opacity::-webkit-slider-runnable-track {
 input[type="range"].opacity::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 18px;
-  height: 18px;
+  width: 22px;
+  height: 22px;
   border-radius: 999px;
   background: #8b5cf6;
-  margin-top: -7px;
+  margin-top: -9px;
   box-shadow: 0 4px 10px rgba(139,92,246,0.45);
+  cursor: pointer;
 }
 input[type="range"].opacity::-moz-range-track {
   height: 4px;
@@ -202,12 +240,13 @@ input[type="range"].opacity::-moz-range-track {
   border-radius: 999px;
 }
 input[type="range"].opacity::-moz-range-thumb {
-  width: 18px;
-  height: 18px;
+  width: 22px;
+  height: 22px;
   border-radius: 999px;
   background: #8b5cf6;
   border: none;
   box-shadow: 0 4px 10px rgba(139,92,246,0.45);
+  cursor: pointer;
 }
 
 /* Hide scrollbars where appropriate */
@@ -217,3 +256,6 @@ input[type="range"].opacity::-moz-range-thumb {
 /* Safe area helpers */
 .safe-top    { padding-top: env(safe-area-inset-top, 0px); }
 .safe-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
+
+/* Prevent map gestures from being hijacked by page scroll */
+.leaflet-container { touch-action: none; }

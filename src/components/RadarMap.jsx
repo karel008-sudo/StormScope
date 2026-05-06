@@ -18,10 +18,10 @@ shimLeafletIcons()
  *   - RainViewer radar tile overlay (current selected frame)
  *   - animated user-location pulse (custom DOM marker)
  *
- * Notes:
- *   - We render a single TileLayer per frame keyed by frame.id; the previous
- *     layer remains in the DOM long enough for crossfade behavior to be subtle.
- *   - Opacity is controlled via prop and applied to the TileLayer.
+ * Robustness:
+ *   - invalidateSize() on container resize and visibility change
+ *   - re-centering only when location moves meaningfully
+ *   - tile layer keyed by frame id so React reuses underlying Leaflet object
  */
 export default function RadarMap({
   center,
@@ -34,8 +34,20 @@ export default function RadarMap({
   smooth = true,
   snow = true,
   color = 2,
+  visible = true,
 }) {
   const mapCenter = useMemo(() => center || DEFAULT_CENTER, [center])
+  const tileUrl = useMemo(
+    () =>
+      host && selectedFrame
+        ? buildTileUrl(host, selectedFrame, {
+            color,
+            smooth: smooth ? 1 : 0,
+            snow: snow ? 1 : 0,
+          })
+        : null,
+    [host, selectedFrame, color, smooth, snow],
+  )
 
   return (
     <MapContainer
@@ -54,16 +66,11 @@ export default function RadarMap({
         maxZoom={19}
       />
 
-      {host && selectedFrame && (
+      {tileUrl && selectedFrame && (
         <TileLayer
           key={selectedFrame.id}
-          url={buildTileUrl(host, selectedFrame, {
-            color,
-            smooth: smooth ? 1 : 0,
-            snow: snow ? 1 : 0,
-          })}
+          url={tileUrl}
           opacity={opacity}
-          // small zIndex so it sits above basemap but under markers
           zIndex={400}
           maxNativeZoom={10}
           maxZoom={19}
@@ -73,6 +80,8 @@ export default function RadarMap({
       <UserPulseMarker position={userPosition} />
 
       {followLocation && userPosition && <RecenterTo position={userPosition} />}
+
+      <SizeKeeper visible={visible} />
     </MapContainer>
   )
 }
@@ -138,5 +147,63 @@ function RecenterTo({ position }) {
       easeLinearity: 0.25,
     })
   }, [position, map])
+  return null
+}
+
+/**
+ * SizeKeeper invalidates Leaflet sizing when:
+ *   - the map container resizes (ResizeObserver)
+ *   - the document becomes visible (tab switch / app foreground)
+ *   - the `visible` prop flips from false→true (parent tab change)
+ *
+ * This prevents the "gray map" bug after splash/tab transitions and on iOS
+ * Safari when the URL bar collapses.
+ */
+function SizeKeeper({ visible }) {
+  const map = useMap()
+  useEffect(() => {
+    if (!map) return
+    const container = map.getContainer()
+
+    const invalidate = () => {
+      try { map.invalidateSize({ animate: false }) } catch {}
+    }
+
+    // initial settle (after first paint)
+    const t1 = setTimeout(invalidate, 80)
+    const t2 = setTimeout(invalidate, 320)
+
+    const ro = typeof ResizeObserver !== 'undefined'
+      ? new ResizeObserver(() => invalidate())
+      : null
+    if (ro && container) ro.observe(container)
+
+    const onVis = () => {
+      if (document.visibilityState === 'visible') invalidate()
+    }
+    document.addEventListener('visibilitychange', onVis)
+    window.addEventListener('orientationchange', invalidate)
+    window.addEventListener('resize', invalidate)
+
+    return () => {
+      clearTimeout(t1)
+      clearTimeout(t2)
+      if (ro) ro.disconnect()
+      document.removeEventListener('visibilitychange', onVis)
+      window.removeEventListener('orientationchange', invalidate)
+      window.removeEventListener('resize', invalidate)
+    }
+  }, [map])
+
+  // Also invalidate when parent flips us back on
+  useEffect(() => {
+    if (visible && map) {
+      const t = setTimeout(() => {
+        try { map.invalidateSize({ animate: false }) } catch {}
+      }, 80)
+      return () => clearTimeout(t)
+    }
+  }, [visible, map])
+
   return null
 }

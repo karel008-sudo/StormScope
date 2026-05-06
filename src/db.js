@@ -19,7 +19,8 @@ export const DEFAULT_SETTINGS = {
   showSnowLayer: true,
   followLocation: true,
   hapticsEnabled: true,
-  preferredColor: 2,        // RainViewer color scheme
+  preferredColor: 2,        // RainViewer color scheme (0..8)
+  reduceMotion: false,
 }
 
 export async function loadSettings() {

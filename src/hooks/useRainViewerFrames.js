@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { fetchRainviewerMetadata, normalize } from '../providers/rainviewerProvider.js'
+import {
+  fetchRainviewerMetadata, normalize, isStale,
+} from '../providers/rainviewerProvider.js'
 import { cacheMetadata, loadCachedMetadata } from '../db.js'
 import { METADATA_REFRESH_MS } from '../constants.js'
 
@@ -10,11 +12,10 @@ import { METADATA_REFRESH_MS } from '../constants.js'
  *   loading      — first load in progress
  *   refreshing   — background refresh in progress
  *   error        — last error message (null if no error)
- *   data         — normalized metadata { frames, host, generatedAt, hasNowcast, ... }
+ *   data         — normalized metadata
  *   fromCache    — true if data came from Dexie cache (no fresh network)
+ *   stale        — generated > 15 min ago (irrespective of fromCache)
  *   lastFetchAt  — ms timestamp of last successful network fetch
- *
- * Auto-refreshes every METADATA_REFRESH_MS while the document is visible.
  */
 export function useRainViewerFrames() {
   const [data, setData] = useState(null)
@@ -24,6 +25,7 @@ export function useRainViewerFrames() {
   const [fromCache, setFromCache] = useState(false)
   const [lastFetchAt, setLastFetchAt] = useState(null)
   const abortRef = useRef(null)
+  const dataRef = useRef(null)
 
   const refresh = useCallback(async ({ silent = false } = {}) => {
     if (abortRef.current) abortRef.current.abort()
@@ -33,31 +35,34 @@ export function useRainViewerFrames() {
     else setLoading(true)
     try {
       const meta = await fetchRainviewerMetadata(ac.signal)
+      dataRef.current = meta
       setData(meta)
       setError(null)
       setFromCache(false)
       setLastFetchAt(Date.now())
-      // best-effort cache update
       cacheMetadata(meta.raw).catch(() => {})
       return meta
     } catch (e) {
       if (e?.name === 'AbortError') return null
-      setError(e.message || 'Failed to fetch radar metadata')
-      // Fall back to cached metadata if available
-      const cached = await loadCachedMetadata()
-      if (cached?.metadata && !data) {
-        try {
-          const meta = normalize(cached.metadata)
-          setData(meta)
-          setFromCache(true)
-        } catch {}
+      setError(e?.message || 'Failed to fetch radar metadata')
+      // Fall back to cached metadata once
+      if (!dataRef.current) {
+        const cached = await loadCachedMetadata()
+        if (cached?.metadata) {
+          try {
+            const meta = normalize(cached.metadata)
+            dataRef.current = meta
+            setData(meta)
+            setFromCache(true)
+          } catch {}
+        }
       }
       return null
     } finally {
       if (silent) setRefreshing(false)
       else setLoading(false)
     }
-  }, [data])
+  }, [])
 
   // Initial load
   useEffect(() => {
@@ -65,7 +70,7 @@ export function useRainViewerFrames() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // Periodic refresh while visible
+  // Periodic refresh while document is visible + refresh on tab show
   useEffect(() => {
     if (typeof document === 'undefined') return
     let timer = null
@@ -95,5 +100,7 @@ export function useRainViewerFrames() {
     }
   }, [refresh])
 
-  return { data, loading, refreshing, error, fromCache, lastFetchAt, refresh }
+  const stale = !!(data && isStale(data.generatedAt))
+
+  return { data, loading, refreshing, error, fromCache, stale, lastFetchAt, refresh }
 }

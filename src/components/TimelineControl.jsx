@@ -17,6 +17,8 @@ export default function TimelineControl({
 }) {
   const total = frames?.length ?? 0
   const disabled = total === 0
+  const value = Math.min(Math.max(index, 0), Math.max(0, total - 1))
+
   return (
     <GlassCard strong className="p-3 slide-up">
       <div className="flex items-center justify-between mb-2.5">
@@ -29,12 +31,13 @@ export default function TimelineControl({
             background: 'rgba(34,211,238,0.14)',
             border: '1px solid rgba(34,211,238,0.4)',
             color: '#22d3ee',
-            padding: '6px 10px',
+            padding: '8px 12px',
             fontSize: 11,
             fontWeight: 700,
             letterSpacing: 0.5,
+            minHeight: 36,
           }}
-          aria-label="Snap to now"
+          aria-label="Snap to current time (Now)"
         >
           <CircleDot size={12} />
           NOW
@@ -46,13 +49,21 @@ export default function TimelineControl({
         className="timeline w-full"
         min={0}
         max={Math.max(0, total - 1)}
-        value={Math.min(index, Math.max(0, total - 1))}
+        value={value}
         disabled={disabled}
         onChange={(e) => onScrub(parseInt(e.target.value, 10))}
+        onInput={(e) => onScrub(parseInt(e.target.value, 10))}
+        aria-label="Radar timeline scrubber"
+        aria-valuemin={0}
+        aria-valuemax={Math.max(0, total - 1)}
+        aria-valuenow={value}
+        aria-valuetext={selected ? `Frame ${value + 1} of ${total}, ${selected.label}` : ''}
       />
 
-      {/* Past / Now / Forecast tick marks */}
-      <div className="flex justify-between text-[9px] uppercase tracking-widest mt-1" style={{ color: '#52525b' }}>
+      <div
+        className="flex justify-between text-[9px] uppercase tracking-widest mt-1"
+        style={{ color: '#52525b' }}
+      >
         <span>Past</span>
         <span style={{ color: '#22d3ee' }}>Now</span>
         <span style={{ color: nowIndex < total - 1 ? '#fbbf24' : '#3f3f46' }}>
@@ -60,13 +71,21 @@ export default function TimelineControl({
         </span>
       </div>
 
-      <div className="mt-3 flex items-center justify-center gap-2">
-        <CtrlBtn onClick={() => { haptic.light(); onStepBack() }} disabled={disabled} aria-label="Previous frame">
-          <SkipBack size={16} />
+      <div className="mt-3 flex items-center justify-center gap-3">
+        <CtrlBtn
+          onClick={() => { haptic.light(); onStepBack() }}
+          disabled={disabled}
+          aria-label="Previous frame"
+        >
+          <SkipBack size={18} />
         </CtrlBtn>
         <PlayBtn onClick={onTogglePlay} disabled={disabled} isPlaying={isPlaying} />
-        <CtrlBtn onClick={() => { haptic.light(); onStepForward() }} disabled={disabled} aria-label="Next frame">
-          <SkipForward size={16} />
+        <CtrlBtn
+          onClick={() => { haptic.light(); onStepForward() }}
+          disabled={disabled}
+          aria-label="Next frame"
+        >
+          <SkipForward size={18} />
         </CtrlBtn>
       </div>
     </GlassCard>
@@ -76,11 +95,12 @@ export default function TimelineControl({
 function CtrlBtn({ children, onClick, disabled, ...rest }) {
   return (
     <button
+      type="button"
       onClick={onClick}
       disabled={disabled}
       className="rounded-full flex items-center justify-center active:scale-95 transition-all disabled:opacity-30"
       style={{
-        width: 40, height: 40,
+        width: 44, height: 44,
         background: 'rgba(255,255,255,0.05)',
         border: '1px solid rgba(255,255,255,0.10)',
         color: '#d4d4d8',
@@ -95,11 +115,12 @@ function CtrlBtn({ children, onClick, disabled, ...rest }) {
 function PlayBtn({ onClick, disabled, isPlaying }) {
   return (
     <button
+      type="button"
       onClick={onClick}
       disabled={disabled}
       className="rounded-full flex items-center justify-center active:scale-95 transition-all disabled:opacity-40"
       style={{
-        width: 56, height: 56,
+        width: 60, height: 60,
         background: isPlaying
           ? 'linear-gradient(135deg, #22d3ee, #0891b2)'
           : 'linear-gradient(135deg, #7c3aed, #9333ea)',
@@ -108,9 +129,12 @@ function PlayBtn({ onClick, disabled, isPlaying }) {
           : '0 10px 30px rgba(139,92,246,0.50)',
         color: '#0b0b11',
       }}
-      aria-label={isPlaying ? 'Pause' : 'Play'}
+      aria-label={isPlaying ? 'Pause playback' : 'Play radar animation'}
+      aria-pressed={isPlaying}
     >
-      {isPlaying ? <Pause size={22} fill="#0b0b11" /> : <Play size={22} fill="#0b0b11" style={{ marginLeft: 2 }} />}
+      {isPlaying
+        ? <Pause size={24} fill="#0b0b11" />
+        : <Play size={24} fill="#0b0b11" style={{ marginLeft: 2 }} />}
     </button>
   )
 }

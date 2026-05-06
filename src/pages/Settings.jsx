@@ -1,6 +1,7 @@
 import { Settings as SettingsIcon, Info, RotateCcw } from 'lucide-react'
 import GlassCard from '../components/GlassCard.jsx'
 import { haptic } from '../haptic.js'
+import { RAINVIEWER_COLOR_SCHEMES, RAINVIEWER_PROVIDER } from '../providers/rainviewerProvider.js'
 
 export default function Settings({ settings, onUpdate, onReset }) {
   return (
@@ -73,6 +74,13 @@ export default function Settings({ settings, onUpdate, onReset }) {
           value={settings.followLocation}
           onChange={(v) => onUpdate({ followLocation: v })}
         />
+        <NativeSelectRow
+          label="Color scheme"
+          desc="RainViewer palette for storm intensity"
+          value={settings.preferredColor}
+          options={RAINVIEWER_COLOR_SCHEMES.map((c) => ({ value: c.value, label: c.label }))}
+          onChange={(v) => onUpdate({ preferredColor: parseInt(v, 10) })}
+        />
       </GlassCard>
 
       <div className="h-3" />
@@ -84,6 +92,12 @@ export default function Settings({ settings, onUpdate, onReset }) {
           value={settings.hapticsEnabled}
           onChange={(v) => onUpdate({ hapticsEnabled: v })}
         />
+        <ToggleRow
+          label="Reduce motion"
+          desc="Disable non-essential animations and transitions"
+          value={settings.reduceMotion}
+          onChange={(v) => onUpdate({ reduceMotion: v })}
+        />
       </GlassCard>
 
       <div className="h-3" />
@@ -91,7 +105,7 @@ export default function Settings({ settings, onUpdate, onReset }) {
       <GlassCard strong className="px-3.5 py-3 space-y-2">
         <Attribution
           name="RainViewer"
-          desc="Global radar tiles. Free for personal & educational use."
+          desc={RAINVIEWER_PROVIDER.limitations}
           link="https://www.rainviewer.com/"
         />
         <Attribution
@@ -114,10 +128,14 @@ export default function Settings({ settings, onUpdate, onReset }) {
             lineHeight: 1.4,
           }}
         >
-          <div className="font-bold uppercase tracking-widest text-[9px] mb-0.5" style={{ color: '#a78bfa' }}>
+          <div
+            className="font-bold uppercase tracking-widest text-[9px] mb-0.5"
+            style={{ color: '#a78bfa' }}
+          >
             Coming soon
           </div>
-          ČHMÚ / CZRAD provider planned via backend proxy — 5-min cadence, +60 min nowcast, ~7 days of history over Czech Republic.
+          ČHMÚ / CZRAD provider planned via backend proxy — 5-min cadence, +60 min nowcast,
+          ~7 days of history over Czech Republic. Blitzortung lightning archive overlay also planned.
         </div>
       </GlassCard>
 
@@ -127,15 +145,16 @@ export default function Settings({ settings, onUpdate, onReset }) {
         <div className="flex items-start gap-2.5">
           <Info size={16} style={{ color: '#a78bfa', marginTop: 2 }} />
           <div style={{ color: '#a1a1aa', fontSize: 12.5, lineHeight: 1.5 }}>
-            <strong style={{ color: '#f8f8ff' }}>StormScope</strong> is a personal-use storm radar.
-            Live rain, storm motion, and sky awareness around your location. No accounts, no servers,
-            no data leaves your device.
+            <strong style={{ color: '#f8f8ff' }}>StormScope</strong> is a personal-use storm
+            radar. Live rain, storm motion, and sky awareness around your location. No accounts,
+            no servers, no data leaves your device.
           </div>
         </div>
       </GlassCard>
 
       <div className="h-3" />
       <button
+        type="button"
         onClick={() => {
           haptic.warning()
           onReset()
@@ -147,7 +166,9 @@ export default function Settings({ settings, onUpdate, onReset }) {
           color: '#f87171',
           fontSize: 13,
           fontWeight: 700,
+          minHeight: 48,
         }}
+        aria-label="Reset all settings to defaults"
       >
         <RotateCcw size={14} />
         Reset all settings
@@ -162,7 +183,10 @@ export default function Settings({ settings, onUpdate, onReset }) {
 
 function SectionTitle({ children }) {
   return (
-    <div className="text-[10px] uppercase tracking-widest font-bold mb-1.5 mt-1" style={{ color: '#71717a' }}>
+    <div
+      className="text-[10px] uppercase tracking-widest font-bold mb-1.5 mt-1"
+      style={{ color: '#71717a' }}
+    >
       {children}
     </div>
   )
@@ -173,7 +197,11 @@ function SliderRow({ label, value, onChange, min, max, step, render }) {
     <div>
       <div className="flex items-center justify-between mb-1.5">
         <span style={{ color: '#d4d4d8', fontSize: 13, fontWeight: 600 }}>{label}</span>
-        <span className="font-mono" style={{ color: '#a78bfa', fontSize: 12, fontWeight: 700 }}>
+        <span
+          className="font-mono"
+          style={{ color: '#a78bfa', fontSize: 12, fontWeight: 700 }}
+          aria-live="polite"
+        >
           {render(value)}
         </span>
       </div>
@@ -183,6 +211,8 @@ function SliderRow({ label, value, onChange, min, max, step, render }) {
         min={min} max={max} step={step}
         value={value}
         onChange={(e) => onChange(parseFloat(e.target.value))}
+        onInput={(e) => onChange(parseFloat(e.target.value))}
+        aria-label={label}
       />
     </div>
   )
@@ -196,27 +226,29 @@ function ToggleRow({ label, desc, value, onChange }) {
         {desc && <div style={{ color: '#71717a', fontSize: 11.5, marginTop: 1 }}>{desc}</div>}
       </div>
       <button
+        type="button"
         onClick={() => {
           haptic.selection()
           onChange(!value)
         }}
         className="rounded-full transition-all shrink-0"
         style={{
-          width: 46, height: 28,
+          width: 50, height: 30,
           background: value ? 'linear-gradient(135deg, #7c3aed, #9333ea)' : 'rgba(255,255,255,0.10)',
           border: '1px solid rgba(255,255,255,0.10)',
           padding: 2,
           position: 'relative',
         }}
-        aria-pressed={value}
+        role="switch"
+        aria-checked={value}
         aria-label={label}
       >
         <span
           className="block rounded-full transition-transform"
           style={{
-            width: 22, height: 22,
+            width: 24, height: 24,
             background: '#f8f8ff',
-            transform: value ? 'translateX(18px)' : 'translateX(0)',
+            transform: value ? 'translateX(20px)' : 'translateX(0)',
             boxShadow: '0 2px 6px rgba(0,0,0,0.4)',
           }}
         />
@@ -231,21 +263,30 @@ function SelectRow({ label, value, onChange, options }) {
       <div className="mb-1.5" style={{ color: '#d4d4d8', fontSize: 13, fontWeight: 600 }}>
         {label}
       </div>
-      <div className="grid gap-1.5" style={{ gridTemplateColumns: `repeat(${options.length}, minmax(0, 1fr))` }}>
+      <div
+        className="grid gap-1.5"
+        style={{ gridTemplateColumns: `repeat(${options.length}, minmax(0, 1fr))` }}
+        role="radiogroup"
+        aria-label={label}
+      >
         {options.map((o) => {
           const active = value === o.value
           return (
             <button
               key={o.value}
+              type="button"
+              role="radio"
+              aria-checked={active}
               onClick={() => {
                 haptic.selection()
                 onChange(o.value)
               }}
-              className="rounded-xl px-2 py-2 text-xs font-bold transition-all"
+              className="rounded-xl px-2 text-xs font-bold transition-all"
               style={{
                 background: active ? 'rgba(139,92,246,0.20)' : 'rgba(255,255,255,0.04)',
                 border: `1px solid ${active ? 'rgba(139,92,246,0.55)' : 'rgba(255,255,255,0.10)'}`,
                 color: active ? '#ddd6fe' : '#a1a1aa',
+                minHeight: 40,
               }}
             >
               {o.label}
@@ -253,6 +294,44 @@ function SelectRow({ label, value, onChange, options }) {
           )
         })}
       </div>
+    </div>
+  )
+}
+
+function NativeSelectRow({ label, desc, value, onChange, options }) {
+  return (
+    <div>
+      <div style={{ color: '#d4d4d8', fontSize: 13, fontWeight: 600 }}>{label}</div>
+      {desc && <div style={{ color: '#71717a', fontSize: 11.5, marginTop: 1, marginBottom: 6 }}>{desc}</div>}
+      <select
+        value={value}
+        onChange={(e) => {
+          haptic.selection()
+          onChange(e.target.value)
+        }}
+        className="w-full rounded-xl px-3 py-2"
+        style={{
+          background: 'rgba(255,255,255,0.06)',
+          border: '1px solid rgba(255,255,255,0.10)',
+          color: '#f8f8ff',
+          fontSize: 13,
+          fontWeight: 600,
+          appearance: 'none',
+          minHeight: 40,
+          backgroundImage:
+            'url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'14\' height=\'14\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%23a1a1aa\' stroke-width=\'2\'><polyline points=\'6 9 12 15 18 9\'/></svg>")',
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'right 12px center',
+          paddingRight: 32,
+        }}
+        aria-label={label}
+      >
+        {options.map((o) => (
+          <option key={o.value} value={o.value} style={{ background: '#0b0b11' }}>
+            {o.label}
+          </option>
+        ))}
+      </select>
     </div>
   )
 }
@@ -268,9 +347,10 @@ function Attribution({ name, desc, link }) {
         background: 'rgba(255,255,255,0.03)',
         border: '1px solid rgba(255,255,255,0.07)',
       }}
+      aria-label={`${name} — open in new tab`}
     >
       <div style={{ color: '#f8f8ff', fontSize: 12.5, fontWeight: 700 }}>{name}</div>
-      <div style={{ color: '#a1a1aa', fontSize: 11.5, marginTop: 1 }}>{desc}</div>
+      <div style={{ color: '#a1a1aa', fontSize: 11.5, marginTop: 1, lineHeight: 1.4 }}>{desc}</div>
     </a>
   )
 }

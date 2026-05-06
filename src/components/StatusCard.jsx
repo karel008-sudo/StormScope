@@ -10,12 +10,13 @@ export default function StatusCard({
   generatedAt = null,
   refreshing = false,
   fromCache = false,
+  stale = false,
   error = null,
 }) {
   const noData = pastCount === 0 && nowcastCount === 0
 
   return (
-    <GlassCard strong className="px-3.5 py-3 fade-in">
+    <GlassCard strong className="px-3.5 py-3 fade-in" role="status" aria-live="polite">
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-2 min-w-0">
           <div
@@ -24,6 +25,7 @@ export default function StatusCard({
               background: noData ? 'rgba(244,63,94,0.12)' : 'rgba(139,92,246,0.16)',
               border: '1px solid rgba(255,255,255,0.08)',
             }}
+            aria-hidden="true"
           >
             {noData ? (
               <CircleAlert size={18} style={{ color: '#f43f5e' }} />
@@ -45,7 +47,14 @@ export default function StatusCard({
           </div>
         </div>
         <div className="flex items-center gap-1.5">
-          {refreshing && <RefreshCw size={14} className="animate-spin" style={{ color: '#a1a1aa' }} />}
+          {refreshing && (
+            <RefreshCw
+              size={14}
+              className="animate-spin"
+              style={{ color: '#a1a1aa' }}
+              aria-label="Refreshing radar"
+            />
+          )}
           <ProviderBadge name={provider} live={!error && !noData} />
         </div>
       </div>
@@ -62,20 +71,16 @@ export default function StatusCard({
         />
       </div>
 
-      {fromCache && (
-        <div
-          className="mt-2.5 text-[11px] flex items-center gap-1.5"
-          style={{ color: '#fbbf24' }}
-        >
+      {(fromCache || stale) && !error && (
+        <div className="mt-2.5 text-[11px] flex items-center gap-1.5" style={{ color: '#fbbf24' }}>
           <CircleAlert size={12} />
-          Showing cached metadata · offline shell active
+          {fromCache
+            ? 'Cached metadata · offline shell active'
+            : 'Latest available frame is older than 15 minutes'}
         </div>
       )}
       {error && !fromCache && (
-        <div
-          className="mt-2.5 text-[11px]"
-          style={{ color: '#f43f5e' }}
-        >
+        <div className="mt-2.5 text-[11px]" style={{ color: '#f43f5e' }}>
           {error}
         </div>
       )}
