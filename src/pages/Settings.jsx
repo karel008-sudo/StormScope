@@ -246,6 +246,11 @@ export default function Settings({
           link="https://www.rainviewer.com/"
         />
         <Attribution
+          name="Open-Meteo"
+          desc="Numeric precipitation forecast at your location (DWD ICON-D2 in Europe, 15-min cadence). Free for non-commercial use."
+          link="https://open-meteo.com/"
+        />
+        <Attribution
           name="OpenStreetMap"
           desc="Base map data — © OpenStreetMap contributors."
           link="https://www.openstreetmap.org/copyright"

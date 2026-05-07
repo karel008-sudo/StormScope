@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import RadarMap from '../components/RadarMap.jsx'
 import StatusCard from '../components/StatusCard.jsx'
 import TimelineControl from '../components/TimelineControl.jsx'
@@ -6,8 +6,10 @@ import LocateFab from '../components/LocateFab.jsx'
 import IntensityLegend from '../components/IntensityLegend.jsx'
 import PermissionState from '../components/PermissionState.jsx'
 import GlassCard from '../components/GlassCard.jsx'
+import ForecastStrip from '../components/ForecastStrip.jsx'
 import { OFFLINE_BANNER_HEIGHT } from '../components/OfflineBanner.jsx'
 import { useOnline } from '../hooks/useOnline.js'
+import { useOpenMeteoForecast } from '../hooks/useOpenMeteoForecast.js'
 import { CloudOff, MapPin } from 'lucide-react'
 import { DEFAULT_CENTER } from '../constants.js'
 
@@ -60,6 +62,18 @@ export default function Radar({
   }, [geo.position])
 
   const center = geo.position ? [geo.position.lat, geo.position.lng] : DEFAULT_CENTER
+
+  // Open-Meteo point forecast at the user's position (or default if denied).
+  // Provides 15-min precipitation buckets for the next 2 hours, refreshed
+  // every 5 min — fills the "no forecast frames" gap when RainViewer's
+  // tile-based nowcast is empty (which is most of the time).
+  const forecastPosition = useMemo(
+    () => (geo.position
+      ? { lat: geo.position.lat, lng: geo.position.lng }
+      : { lat: DEFAULT_CENTER[0], lng: DEFAULT_CENTER[1] }),
+    [geo.position],
+  )
+  const forecast = useOpenMeteoForecast(forecastPosition)
 
   const handleLocateFab = () => {
     if (
@@ -193,6 +207,18 @@ export default function Radar({
           </div>
         )}
 
+        {/* Real point-forecast strip — shows up even if RainViewer's
+            nowcast is empty. Lives ABOVE the timeline because forecast is
+            the user's primary "what comes next" signal. */}
+        <div className="pointer-events-auto">
+          <ForecastStrip
+            data={forecast.data}
+            loading={forecast.loading}
+            error={forecast.error}
+            hasLocation={!!geo.position}
+          />
+        </div>
+
         <div className="pointer-events-auto">
           {loading ? (
             <SkeletonTimeline />
@@ -217,12 +243,13 @@ export default function Radar({
 
       {/* Locate FAB (Google-Maps style, with caption) — highest z so it sits
           above any overlapping cards in the bottom stack. The caption beneath
-          the icon makes the control unmissable on a dark map. */}
+          the icon makes the control unmissable on a dark map. Offset clears
+          the timeline (~150 px) + the new ForecastStrip (~95 px) + gaps. */}
       <div
         className="absolute right-3"
         style={{
           zIndex: 40,
-          bottom: 'calc(58px + env(safe-area-inset-bottom, 0px) + 12px + 200px)',
+          bottom: 'calc(58px + env(safe-area-inset-bottom, 0px) + 12px + 310px)',
         }}
       >
         <LocateFab

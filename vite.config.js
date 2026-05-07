@@ -49,6 +49,18 @@ export default defineConfig({
               cacheableResponse: { statuses: [0, 200] },
             },
           },
+          {
+            // Open-Meteo forecast — short-lived cache so we can render
+            // a stale-but-recent forecast offline if the device drops out.
+            urlPattern: /^https:\/\/api\.open-meteo\.com\/v1\/forecast.*$/,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'openmeteo-forecast',
+              networkTimeoutSeconds: 6,
+              expiration: { maxEntries: 16, maxAgeSeconds: 60 * 15 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
         ],
       },
       manifest: {

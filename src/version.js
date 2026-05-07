@@ -9,9 +9,20 @@
 //                    items can be plain strings or { label, kind } where
 //                    kind ∈ 'new' | 'fix' | 'change' | 'remove'
 
-export const APP_VERSION = '0.3.3'
+export const APP_VERSION = '0.4.0'
 
 export const RELEASE_NOTES = [
+  {
+    version: '0.4.0',
+    date: '2026-05-07',
+    title: 'Real precipitation forecast — even when RainViewer is empty',
+    items: [
+      { kind: 'new', label: "New forecast strip on the Radar tab. 8 vertical bars showing the next 2 hours in 15-minute steps at your location, with intensity color-coded against the same legend as the radar overlay. Tap a bar for the exact mm value." },
+      { kind: 'new', label: 'Headline summary above the bars: "No precipitation in the next 2 hours" / "Light rain in 30 min" / "Heavy rain now" — quick glance, actionable.' },
+      { kind: 'new', label: 'Source: Open-Meteo (DWD ICON-D2 model in Europe, 15-min cadence). CORS-friendly, no API key, free for non-commercial use. Refreshes every 5 minutes when the app is visible; cached offline for 15 minutes.' },
+      { kind: 'change', label: 'Why a separate forecast and not radar map frames? RainViewer\'s free public API only exposes nowcast tiles when there\'s active precipitation it can extrapolate — most of the time the array is empty. The new strip is honest about being a numeric point forecast at your location, not a map overlay.' },
+    ],
+  },
   {
     version: '0.3.3',
     date: '2026-05-07',
