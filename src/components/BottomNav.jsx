@@ -11,9 +11,12 @@ const TABS = [
 export default function BottomNav({ tab, onChange }) {
   return (
     <nav
-      className="fixed left-0 right-0 z-40"
+      className="fixed left-0 right-0"
       style={{
         bottom: 0,
+        // Leaflet's default control z-index is 800. Sit above it so the
+        // bottom-right attribution can't intercept taps on the Settings tab.
+        zIndex: 1100,
         background: 'rgba(0,0,0,0.78)',
         borderTop: '1px solid rgba(255,255,255,0.08)',
         backdropFilter: 'blur(24px)',

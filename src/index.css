@@ -84,6 +84,12 @@ input, select, textarea, button {
   background: rgba(11,11,17,0.85) !important;
   backdrop-filter: blur(8px);
 }
+/* Lift Leaflet bottom controls (attribution) above our 58px bottom nav so
+   the attribution is readable AND doesn't intercept nav taps. */
+.leaflet-bottom {
+  margin-bottom: calc(58px + env(safe-area-inset-bottom, 0px) + 4px) !important;
+  z-index: 600 !important;
+}
 
 /* Animations */
 @keyframes radarSweep {

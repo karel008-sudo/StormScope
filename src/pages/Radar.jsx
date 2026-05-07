@@ -30,7 +30,12 @@ export default function Radar({
   const headerOffset = online ? 0 : OFFLINE_BANNER_HEIGHT
 
   useEffect(() => {
-    if (geo.status === 'denied' || geo.status === 'error' || geo.status === 'unsupported') {
+    if (
+      geo.status === 'denied' ||
+      geo.status === 'os-blocked' ||
+      geo.status === 'error' ||
+      geo.status === 'unsupported'
+    ) {
       setShowPermission(true)
     } else if (geo.status === 'granted') {
       setShowPermission(false)
@@ -105,10 +110,15 @@ export default function Radar({
 
         {showPermission && (
           <PermissionState
-            kind={geo.status === 'unsupported' ? 'unsupported' : geo.status === 'denied' ? 'denied' : 'error'}
+            kind={
+              geo.status === 'unsupported' ? 'unsupported'
+              : geo.status === 'os-blocked' ? 'os-blocked'
+              : geo.status === 'denied' ? 'denied'
+              : 'error'
+            }
             onAction={() => {
               setShowPermission(false)
-              onRequestLocation()
+              if (geo.status !== 'os-blocked') onRequestLocation()
             }}
             onDismiss={() => setShowPermission(false)}
           />

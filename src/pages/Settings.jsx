@@ -1,7 +1,8 @@
 import { Settings as SettingsIcon, Info, RotateCcw } from 'lucide-react'
 import GlassCard from '../components/GlassCard.jsx'
+import ColorSchemePicker from '../components/ColorSchemePicker.jsx'
 import { haptic } from '../haptic.js'
-import { RAINVIEWER_COLOR_SCHEMES, RAINVIEWER_PROVIDER } from '../providers/rainviewerProvider.js'
+import { RAINVIEWER_PROVIDER } from '../providers/rainviewerProvider.js'
 
 export default function Settings({ settings, onUpdate, onReset }) {
   return (
@@ -74,12 +75,11 @@ export default function Settings({ settings, onUpdate, onReset }) {
           value={settings.followLocation}
           onChange={(v) => onUpdate({ followLocation: v })}
         />
-        <NativeSelectRow
+        <ColorSchemePicker
           label="Color scheme"
           desc="RainViewer palette for storm intensity"
           value={settings.preferredColor}
-          options={RAINVIEWER_COLOR_SCHEMES.map((c) => ({ value: c.value, label: c.label }))}
-          onChange={(v) => onUpdate({ preferredColor: parseInt(v, 10) })}
+          onChange={(v) => onUpdate({ preferredColor: v })}
         />
       </GlassCard>
 
@@ -294,44 +294,6 @@ function SelectRow({ label, value, onChange, options }) {
           )
         })}
       </div>
-    </div>
-  )
-}
-
-function NativeSelectRow({ label, desc, value, onChange, options }) {
-  return (
-    <div>
-      <div style={{ color: '#d4d4d8', fontSize: 13, fontWeight: 600 }}>{label}</div>
-      {desc && <div style={{ color: '#71717a', fontSize: 11.5, marginTop: 1, marginBottom: 6 }}>{desc}</div>}
-      <select
-        value={value}
-        onChange={(e) => {
-          haptic.selection()
-          onChange(e.target.value)
-        }}
-        className="w-full rounded-xl px-3 py-2"
-        style={{
-          background: 'rgba(255,255,255,0.06)',
-          border: '1px solid rgba(255,255,255,0.10)',
-          color: '#f8f8ff',
-          fontSize: 13,
-          fontWeight: 600,
-          appearance: 'none',
-          minHeight: 40,
-          backgroundImage:
-            'url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'14\' height=\'14\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%23a1a1aa\' stroke-width=\'2\'><polyline points=\'6 9 12 15 18 9\'/></svg>")',
-          backgroundRepeat: 'no-repeat',
-          backgroundPosition: 'right 12px center',
-          paddingRight: 32,
-        }}
-        aria-label={label}
-      >
-        {options.map((o) => (
-          <option key={o.value} value={o.value} style={{ background: '#0b0b11' }}>
-            {o.label}
-          </option>
-        ))}
-      </select>
     </div>
   )
 }

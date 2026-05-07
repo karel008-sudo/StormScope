@@ -3,7 +3,11 @@ import { haptic } from '../haptic.js'
 
 export default function LocationButton({ status, onClick }) {
   const isReq = status === 'requesting'
-  const denied = status === 'denied' || status === 'unsupported' || status === 'error'
+  const denied =
+    status === 'denied' ||
+    status === 'os-blocked' ||
+    status === 'unsupported' ||
+    status === 'error'
   return (
     <button
       onClick={() => {

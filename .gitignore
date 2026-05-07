@@ -8,3 +8,6 @@ dev-dist/
 !.env.example
 .vite/
 *.log
+playwright-report/
+test-results/
+.playwright-cache/

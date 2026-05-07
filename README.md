@@ -133,6 +133,61 @@ Glass cards use `backdrop-filter: blur()`, hairline borders, no solid background
 2. Tap **Share** → **Add to Home Screen**.
 3. Open the new icon — StormScope launches in standalone mode (no browser chrome). Status bar is translucent dark.
 
+## Real device QA checklist (iPhone)
+
+Run through this list after every meaningful deploy.
+
+**Install & shell**
+- [ ] Open the deployed URL in Safari on iOS (not Chrome on iOS — only Safari can install PWAs there)
+- [ ] **Share → Add to Home Screen** — title shows as `StormScope`
+- [ ] Tap the new home-screen icon — app launches in **standalone** mode (no Safari URL bar, no tab strip, status bar reads as dark translucent)
+- [ ] Splash screen appears for ~0.5 s then transitions to the radar map
+
+**Permissions — happy path**
+- [ ] First launch shows the *"Center the radar on you?"* glass card AND a **Locate me** pill
+- [ ] Tap **Locate me** → iOS prompts for location → tap **Allow While Using App**
+- [ ] Map flies to your location, the violet pulse marker appears
+- [ ] Light haptic tick fires on success
+
+**Permissions — denied path**
+- [ ] Force-quit the app (swipe up, swipe up on the StormScope card)
+- [ ] Settings → Privacy & Security → Location Services → Safari → **Never** *(or for the standalone PWA: Settings → StormScope → Location → Never)*
+- [ ] Re-launch StormScope, tap **Locate me** twice quickly
+- [ ] App must show the **"Location blocked"** card with iOS / macOS / desktop guidance — NOT a generic error
+- [ ] Map still renders (centered on Prague), bottom nav still works, no white screen
+
+**Connectivity**
+- [ ] Settings → Airplane Mode **on**
+- [ ] App shows the amber **"Offline shell active"** banner at the top
+- [ ] StatusCard pushes down by banner height — they do not overlap
+- [ ] Map still shows whatever tiles were already cached
+- [ ] Switch tabs — Timeline / Insights / Settings all open without crash
+- [ ] Airplane Mode **off** → banner disappears within ~1 s, refresh fires automatically on visibility change
+
+**Radar playback**
+- [ ] Radar tab → tap the violet **Play** button (or `aria-label="Play radar animation"`)
+- [ ] Frames advance every ~650 ms (or per Settings → Animation speed)
+- [ ] Subtle haptic pulse fires when playback crosses **Past → Forecast** boundary (only if RainViewer returned forecast frames)
+- [ ] Drag the scrubber — frame & timestamp update live (no need to release on iOS)
+- [ ] Tap **NOW** chip — snaps to latest sweep, light haptic
+- [ ] Background the app for 30 s, foreground it — playback resumes (interval was paused on `visibilitychange:hidden`)
+
+**Settings persistence**
+- [ ] Settings tab → Radar opacity to 30 % → Animation speed to **Fast** → toggle Haptics off → pick a different **Color scheme** chip
+- [ ] Force-quit the PWA, reopen — every change above is still there
+- [ ] Color scheme chip change reflects immediately on the radar overlay (a fresh tile layer rebuilds)
+
+**Update after new deployment**
+- [ ] On Netlify, push a new commit and let it deploy
+- [ ] Open the already-installed PWA on the phone — within seconds the new SW activates and the page silently reloads (controllerchange handler with 60 s cooldown guard, so no reload loop)
+- [ ] If you need to force it: force-quit + relaunch
+
+**Visual polish**
+- [ ] Status card text is legible at the very top (no notch overlap)
+- [ ] Bottom nav clears the iPhone home indicator (safe-area inset-bottom respected)
+- [ ] Leaflet attribution is visible above the bottom nav, not hidden underneath
+- [ ] No accidental horizontal scroll, no rubber-band overflow at top/bottom outside the map
+
 ## Troubleshooting
 
 **"Permission needed" / location is denied**
@@ -154,9 +209,10 @@ RainViewer's free `nowcast` array is sometimes empty. This is a provider quirk, 
 
 | Tool | Result |
 |---|---|
-| `npm test` | **26 tests passing** (provider normalization edge cases, tile URL, isStale, time/format helpers) |
 | `npm run lint` | **0 errors, 0 warnings** (ESLint flat config + react + react-hooks) |
-| `npm run build` | clean — initial JS chunk 451 KB (141 KB gzip), Insights lazy-loaded as a separate 371 KB chunk (104 KB gzip) |
+| `npm test` | **26 unit tests** (provider normalization edge cases, tile URL, isStale, time/format helpers) |
+| `npm run test:e2e` | **8 Playwright smoke tests** on Pixel 7 mobile viewport — app loads, map visible, nav switches, settings persist after reload, geo-denied does not crash, empty nowcast handled, timeline renders, manifest+SW served |
+| `npm run build` | clean — initial JS chunk 458 KB (143 KB gzip), Insights lazy-loaded as a separate 371 KB chunk (104 KB gzip) |
 | Lighthouse PWA | manifest valid, service worker installed, maskable icon present |
 
 ## Roadmap
