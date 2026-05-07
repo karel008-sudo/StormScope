@@ -35,6 +35,7 @@ export default function RadarMap({
   snow = true,
   color = 2,
   visible = true,
+  recenterToken = 0,
 }) {
   const mapCenter = useMemo(() => center || DEFAULT_CENTER, [center])
   const tileUrl = useMemo(
@@ -83,6 +84,9 @@ export default function RadarMap({
       <UserPulseMarker position={userPosition} />
 
       {followLocation && userPosition && <RecenterTo position={userPosition} />}
+      {userPosition && recenterToken > 0 && (
+        <ManualRecenter position={userPosition} token={recenterToken} />
+      )}
 
       <SizeKeeper visible={visible} />
     </MapContainer>
@@ -150,6 +154,24 @@ function RecenterTo({ position }) {
       easeLinearity: 0.25,
     })
   }, [position, map])
+  return null
+}
+
+/**
+ * Triggered explicitly via the LocateFab. Flies on every token change so the
+ * user can always re-center after panning, regardless of followLocation.
+ */
+function ManualRecenter({ position, token }) {
+  const map = useMap()
+  // Intentionally only react to token; position is read at fire time.
+  useEffect(() => {
+    if (!position) return
+    map.flyTo([position.lat, position.lng], Math.max(map.getZoom(), 9), {
+      duration: 0.7,
+      easeLinearity: 0.25,
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token])
   return null
 }
 

@@ -4,10 +4,12 @@ import OfflineBanner from './components/OfflineBanner.jsx'
 import Radar from './pages/Radar.jsx'
 import Timeline from './pages/Timeline.jsx'
 import Settings from './pages/Settings.jsx'
+import WhatsNewSheet from './components/WhatsNewSheet.jsx'
 import { usePersistentSettings } from './hooks/usePersistentSettings.js'
 import { useGeolocation } from './hooks/useGeolocation.js'
 import { useRainViewerFrames } from './hooks/useRainViewerFrames.js'
 import { useTimelinePlayer } from './hooks/useTimelinePlayer.js'
+import { useVersionGate } from './hooks/useVersionGate.js'
 import { haptic } from './haptic.js'
 import GlassCard from './components/GlassCard.jsx'
 
@@ -30,6 +32,7 @@ export default function App() {
 
   const frames = data?.frames ?? []
   const player = useTimelinePlayer(frames, { speed: settings.playbackSpeed })
+  const version = useVersionGate()
 
   // Splash: settings ready OR safety timeout
   useEffect(() => {
@@ -108,6 +111,7 @@ export default function App() {
             onUpdate={update}
             onReset={reset}
             onOpenLogs={() => setSubView('logs')}
+            onShowReleaseNotes={version.showAgain}
           />
         )}
       </AppShell>
@@ -124,6 +128,14 @@ export default function App() {
             <LogViewer onBack={() => setSubView(null)} />
           </Suspense>
         </div>
+      )}
+
+      {version.shouldShowWhatsNew && (
+        <WhatsNewSheet
+          sinceVersion={version.lastSeen}
+          onDismiss={version.dismiss}
+          onClose={version.dismiss}
+        />
       )}
     </>
   )

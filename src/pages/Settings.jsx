@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import {
-  Settings as SettingsIcon, Info, RotateCcw, Terminal, RefreshCw, ShieldCheck, KeyRound,
+  Settings as SettingsIcon, Info, RotateCcw, Terminal, RefreshCw,
+  ShieldCheck, Sparkles, Rocket,
 } from 'lucide-react'
 import GlassCard from '../components/GlassCard.jsx'
 import ColorSchemePicker from '../components/ColorSchemePicker.jsx'
@@ -9,13 +10,19 @@ import { RAINVIEWER_PROVIDER } from '../providers/rainviewerProvider.js'
 import { useAdmin } from '../hooks/useAdmin.js'
 import { logger } from '../logger.js'
 import { forceUpdateApp } from '../utils/forceUpdate.js'
+import { APP_VERSION } from '../version.js'
 
-const APP_VERSION = '0.1'
 const BUILD_INFO = `Build ${import.meta.env.MODE}`
 
-export default function Settings({ settings, onUpdate, onReset, onOpenLogs }) {
+export default function Settings({
+  settings,
+  onUpdate,
+  onReset,
+  onOpenLogs,
+  onShowReleaseNotes,
+}) {
   const { admin, register: registerVersionTap, tapsRequired } = useAdmin()
-  const [tapHint, setTapHint] = useState(null) // 'enabled' | 'disabled' | 'tap' transient feedback
+  const [tapHint, setTapHint] = useState(null)
   const [updating, setUpdating] = useState(false)
 
   const handleVersionTap = () => {
@@ -39,7 +46,7 @@ export default function Settings({ settings, onUpdate, onReset, onOpenLogs }) {
     if (updating) return
     setUpdating(true)
     haptic.warning()
-    logger.warn('admin', 'Force update requested')
+    logger.warn('updates', 'Force update requested by user')
     await forceUpdateApp({ logger })
     // page reload happens inside forceUpdateApp
   }
@@ -110,7 +117,7 @@ export default function Settings({ settings, onUpdate, onReset, onOpenLogs }) {
         />
         <ToggleRow
           label="Map follows location"
-          desc="Recenter when your position changes"
+          desc="Auto-recenter when your position changes"
           value={settings.followLocation}
           onChange={(v) => onUpdate({ followLocation: v })}
         />
@@ -137,6 +144,97 @@ export default function Settings({ settings, onUpdate, onReset, onOpenLogs }) {
           value={settings.reduceMotion}
           onChange={(v) => onUpdate({ reduceMotion: v })}
         />
+      </GlassCard>
+
+      <div className="h-3" />
+      <SectionTitle accent="#22d3ee">Updates</SectionTitle>
+      <GlassCard strong className="px-3.5 py-3 space-y-2">
+        <div className="flex items-center justify-between gap-3 mb-1">
+          <div className="min-w-0">
+            <div style={{ color: '#d4d4d8', fontSize: 13, fontWeight: 600 }}>
+              StormScope
+            </div>
+            <div style={{ color: '#71717a', fontSize: 11.5 }}>
+              Installed version
+            </div>
+          </div>
+          <span
+            className="font-mono"
+            style={{
+              color: '#a78bfa',
+              fontSize: 13,
+              fontWeight: 700,
+              letterSpacing: 0.4,
+              background: 'rgba(139,92,246,0.10)',
+              border: '1px solid rgba(139,92,246,0.30)',
+              borderRadius: 999,
+              padding: '4px 10px',
+            }}
+            data-testid="installed-version"
+          >
+            v{APP_VERSION}
+          </span>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => { haptic.selection(); onShowReleaseNotes && onShowReleaseNotes() }}
+          className="w-full rounded-xl px-3 py-2.5 inline-flex items-center justify-between transition-all active:scale-[0.99]"
+          style={{
+            background: 'rgba(255,255,255,0.04)',
+            border: '1px solid rgba(255,255,255,0.10)',
+            color: '#f8f8ff',
+            fontSize: 13,
+            fontWeight: 600,
+            minHeight: 44,
+          }}
+          data-testid="open-release-notes"
+        >
+          <span className="inline-flex items-center gap-2">
+            <Sparkles size={14} style={{ color: '#22d3ee' }} />
+            What&apos;s new
+          </span>
+          <span style={{ color: '#71717a', fontSize: 11 }}>release notes</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={handleForceUpdate}
+          disabled={updating}
+          className="w-full rounded-xl px-3 py-2.5 inline-flex items-center justify-between transition-all active:scale-[0.99] disabled:opacity-60"
+          style={{
+            background: 'rgba(245,158,11,0.10)',
+            border: '1px solid rgba(245,158,11,0.35)',
+            color: '#fbbf24',
+            fontSize: 13,
+            fontWeight: 700,
+            minHeight: 44,
+          }}
+          data-testid="force-update"
+          aria-label="Force update — clears caches and reloads"
+        >
+          <span className="inline-flex items-center gap-2">
+            <RefreshCw size={14} className={updating ? 'animate-spin' : ''} />
+            {updating ? 'Updating…' : 'Force update'}
+          </span>
+          <span style={{ color: '#a1a1aa', fontSize: 10.5, fontWeight: 500 }}>
+            clears caches + SW
+          </span>
+        </button>
+
+        <div
+          className="rounded-xl px-3 py-2 text-[11px]"
+          style={{
+            background: 'rgba(0,0,0,0.30)',
+            border: '1px solid rgba(255,255,255,0.06)',
+            color: '#a1a1aa',
+            lineHeight: 1.45,
+          }}
+        >
+          New deploys propagate within ~30 s. If something looks off, try
+          <strong style={{ color: '#fbbf24' }}> Force update</strong> — it nukes
+          every cache and re-downloads the latest build.
+        </div>
       </GlassCard>
 
       <div className="h-3" />
@@ -173,8 +271,9 @@ export default function Settings({ settings, onUpdate, onReset, onOpenLogs }) {
           >
             Coming soon
           </div>
-          ČHMÚ / CZRAD provider planned via backend proxy — 5-min cadence, +60 min nowcast,
-          ~7 days of history over Czech Republic. Blitzortung lightning archive overlay also planned.
+          ČHMÚ / CZRAD provider planned via backend proxy — 5-min cadence,
+          +60 min nowcast, ~7 days of history over Czech Republic. Blitzortung
+          lightning archive overlay also planned.
         </div>
       </GlassCard>
 
@@ -248,31 +347,8 @@ export default function Settings({ settings, onUpdate, onReset, onOpenLogs }) {
               </span>
               <span style={{ color: '#71717a', fontSize: 11 }}>captured locally</span>
             </button>
-            <button
-              type="button"
-              onClick={handleForceUpdate}
-              disabled={updating}
-              className="w-full rounded-xl px-3 py-2.5 inline-flex items-center justify-between transition-all active:scale-[0.99] disabled:opacity-60"
-              style={{
-                background: 'rgba(245,158,11,0.10)',
-                border: '1px solid rgba(245,158,11,0.35)',
-                color: '#fbbf24',
-                fontSize: 13,
-                fontWeight: 700,
-                minHeight: 44,
-              }}
-              data-testid="force-update"
-            >
-              <span className="inline-flex items-center gap-2">
-                <RefreshCw size={14} className={updating ? 'animate-spin' : ''} />
-                {updating ? 'Updating…' : 'Force update'}
-              </span>
-              <span style={{ color: '#a1a1aa', fontSize: 10.5, fontWeight: 500 }}>
-                clears caches + SW
-              </span>
-            </button>
             <div
-              className="rounded-xl px-3 py-2 mt-1 text-[11px]"
+              className="rounded-xl px-3 py-2 text-[11px]"
               style={{
                 background: 'rgba(0,0,0,0.35)',
                 border: '1px solid rgba(255,255,255,0.06)',
@@ -281,7 +357,7 @@ export default function Settings({ settings, onUpdate, onReset, onOpenLogs }) {
               }}
             >
               <div className="flex items-center gap-1.5 mb-1" style={{ color: '#71717a' }}>
-                <KeyRound size={11} />
+                <Rocket size={11} />
                 <span className="uppercase tracking-widest font-bold" style={{ fontSize: 9 }}>
                   Build info
                 </span>
