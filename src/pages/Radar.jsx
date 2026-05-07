@@ -89,9 +89,18 @@ export default function Radar({
   }
 
   return (
-    <div className="relative" style={{ width: '100%', height: '100dvh' }}>
-      {/* Map fills the screen */}
-      <div className="absolute inset-0">
+    // position:fixed inset:0 guarantees the radar fills the viewport on iOS
+    // standalone PWA, where `height: 100dvh` inside a normal-flow wrapper has
+    // been observed to under-resolve and leave the map confined to the middle
+    // of the screen with the bottom nav floating mid-viewport. Bottom nav
+    // (z=1100) still wins z-order, so it sits above this layer.
+    <div
+      className="fixed inset-0"
+      style={{ width: '100%', height: '100%', overflow: 'hidden' }}
+    >
+      {/* Map fills the screen — explicit z-index so the map's leaflet panes
+          (z-400+) stay below the overlay UI. */}
+      <div className="absolute inset-0" style={{ zIndex: 1 }}>
         <RadarMap
           center={center}
           zoom={settings.defaultZoom || 7}
@@ -112,6 +121,7 @@ export default function Radar({
       <div
         className="absolute top-0 left-0 right-0 pointer-events-none"
         style={{
+          zIndex: 5,
           height: `calc(env(safe-area-inset-top, 0px) + ${110 + headerOffset}px)`,
           background:
             'linear-gradient(to bottom, rgba(11,11,17,0.92) 0%, rgba(11,11,17,0.55) 55%, rgba(11,11,17,0) 100%)',
@@ -119,7 +129,10 @@ export default function Radar({
       />
       <header
         className="absolute left-0 right-0 px-3 fade-in"
-        style={{ top: `calc(env(safe-area-inset-top, 8px) + 8px + ${headerOffset}px)` }}
+        style={{
+          zIndex: 10,
+          top: `calc(env(safe-area-inset-top, 8px) + 8px + ${headerOffset}px)`,
+        }}
       >
         <StatusCard
           provider="RainViewer"
@@ -136,7 +149,10 @@ export default function Radar({
       {/* Right-side toolset (legend) */}
       <div
         className="absolute right-3 pointer-events-none"
-        style={{ top: `calc(env(safe-area-inset-top, 8px) + 130px + ${headerOffset}px)` }}
+        style={{
+          zIndex: 10,
+          top: `calc(env(safe-area-inset-top, 8px) + 130px + ${headerOffset}px)`,
+        }}
       >
         <IntensityLegend />
       </div>
@@ -146,6 +162,7 @@ export default function Radar({
       <div
         className="absolute left-0 right-0 px-3 flex flex-col gap-2.5 pointer-events-none"
         style={{
+          zIndex: 20,
           bottom: 'calc(58px + env(safe-area-inset-bottom, 0px) + 12px)',
         }}
       >
@@ -198,13 +215,13 @@ export default function Radar({
         </div>
       </div>
 
-      {/* Locate FAB (Google-Maps style, with caption) — placed AFTER the
-          bottom stack so it stacks above any overlapping cards. The caption
-          beneath the icon makes the control unmissable on a dark map. */}
+      {/* Locate FAB (Google-Maps style, with caption) — highest z so it sits
+          above any overlapping cards in the bottom stack. The caption beneath
+          the icon makes the control unmissable on a dark map. */}
       <div
         className="absolute right-3"
         style={{
-          zIndex: 30,
+          zIndex: 40,
           bottom: 'calc(58px + env(safe-area-inset-bottom, 0px) + 12px + 200px)',
         }}
       >

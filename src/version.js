@@ -9,9 +9,18 @@
 //                    items can be plain strings or { label, kind } where
 //                    kind ∈ 'new' | 'fix' | 'change' | 'remove'
 
-export const APP_VERSION = '0.3.0'
+export const APP_VERSION = '0.3.1'
 
 export const RELEASE_NOTES = [
+  {
+    version: '0.3.1',
+    date: '2026-05-07',
+    title: 'iOS PWA layout fix — full-screen map and visible overlays',
+    items: [
+      { kind: 'fix', label: 'Radar wrapper switched from `height: 100dvh` to `position: fixed; inset: 0` so the map and all overlays (status, intensity legend, locate FAB, timeline) reliably fill the viewport on iOS standalone PWA. Previously the map was confined to the middle of the screen with the bottom nav floating above the home indicator on some devices.' },
+      { kind: 'fix', label: 'Explicit z-index on every Radar overlay (header, legend, bottom stack, locate FAB) so they always paint above Leaflet panes (z-400). Locate FAB and caption now show on top of the map regardless of stacking quirks.' },
+    ],
+  },
   {
     version: '0.3.0',
     date: '2026-05-07',
