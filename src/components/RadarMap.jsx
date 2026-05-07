@@ -59,6 +59,17 @@ export default function RadarMap({
       style={{ width: '100%', height: '100%', background: '#0b0b11' }}
       worldCopyJump
       attributionControl
+      // Bound zoom: radar caps at z=7 native; allowing user past z=13 means
+      // the radar tile is upscaled 64×+ and Leaflet's CSS transform can flake
+      // out on iOS Safari standalone (visible as torn / blank tiles when
+      // pinching in). Capping at z=13 keeps both layers stable and the radar
+      // still readable.
+      maxZoom={13}
+      minZoom={3}
+      bounceAtZoomLimits={false}
+      // iOS double-tap-to-zoom-out (Leaflet's default 'tap' handler) can
+      // fight iOS PWA gestures — disable it; pinch + buttons cover the use case.
+      tap={false}
     >
       <TileLayer
         url={BASEMAP_URL}
@@ -195,8 +206,27 @@ function SizeKeeper({ visible }) {
     if (!map) return
     const container = map.getContainer()
 
+    // Suppress invalidateSize while Leaflet itself is zooming/panning — firing
+    // it mid-gesture on iOS causes the map to shudder or render torn tiles.
+    let zooming = false
+    const onZoomStart = () => { zooming = true }
+    const onZoomEnd   = () => { zooming = false }
+    map.on('zoomstart', onZoomStart)
+    map.on('zoomend',   onZoomEnd)
+
+    let pendingTimer = null
     const invalidate = () => {
+      if (zooming) return
       try { map.invalidateSize({ animate: false }) } catch {}
+    }
+    // Coalesce bursts (ResizeObserver can fire many times in one frame on iOS
+    // when the URL chrome animates). One settle per ~120 ms is enough.
+    const debouncedInvalidate = () => {
+      if (pendingTimer) return
+      pendingTimer = setTimeout(() => {
+        pendingTimer = null
+        invalidate()
+      }, 120)
     }
 
     // initial settle (after first paint)
@@ -204,24 +234,27 @@ function SizeKeeper({ visible }) {
     const t2 = setTimeout(invalidate, 320)
 
     const ro = typeof ResizeObserver !== 'undefined'
-      ? new ResizeObserver(() => invalidate())
+      ? new ResizeObserver(() => debouncedInvalidate())
       : null
     if (ro && container) ro.observe(container)
 
     const onVis = () => {
-      if (document.visibilityState === 'visible') invalidate()
+      if (document.visibilityState === 'visible') debouncedInvalidate()
     }
     document.addEventListener('visibilitychange', onVis)
-    window.addEventListener('orientationchange', invalidate)
-    window.addEventListener('resize', invalidate)
+    window.addEventListener('orientationchange', debouncedInvalidate)
+    window.addEventListener('resize', debouncedInvalidate)
 
     return () => {
       clearTimeout(t1)
       clearTimeout(t2)
+      if (pendingTimer) clearTimeout(pendingTimer)
       if (ro) ro.disconnect()
+      map.off('zoomstart', onZoomStart)
+      map.off('zoomend',   onZoomEnd)
       document.removeEventListener('visibilitychange', onVis)
-      window.removeEventListener('orientationchange', invalidate)
-      window.removeEventListener('resize', invalidate)
+      window.removeEventListener('orientationchange', debouncedInvalidate)
+      window.removeEventListener('resize', debouncedInvalidate)
     }
   }, [map])
 

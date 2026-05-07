@@ -9,9 +9,19 @@
 //                    items can be plain strings or { label, kind } where
 //                    kind ∈ 'new' | 'fix' | 'change' | 'remove'
 
-export const APP_VERSION = '0.3.2'
+export const APP_VERSION = '0.3.3'
 
 export const RELEASE_NOTES = [
+  {
+    version: '0.3.3',
+    date: '2026-05-07',
+    title: 'Pinch-zoom stability on iOS PWA',
+    items: [
+      { kind: 'fix', label: 'Hard cap zoom at z=13 (was z=19). Past z=13 the RainViewer raster is upscaled 64×+ and Leaflet\'s CSS transform was flaking out on iOS Safari standalone — visible as glitched / blank tiles when pinching in. Capping keeps both layers stable.' },
+      { kind: 'fix', label: 'SizeKeeper now suppresses invalidateSize() while a zoom gesture is in progress (zoomstart → zoomend) and debounces ResizeObserver bursts to one settle per 120 ms. Previously the map could shudder or render torn tiles mid-pinch on iOS.' },
+      { kind: 'change', label: 'Tightened viewport meta (maximum-scale=1.0, minimum-scale=1.0) so the OS can never apply page-level zoom on top of the map\'s own zoom. Disabled Leaflet\'s "tap" handler that fights iOS PWA gestures, and turned off bouncy zoom overshoot.' },
+    ],
+  },
   {
     version: '0.3.2',
     date: '2026-05-07',
