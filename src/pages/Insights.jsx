@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import {
-  BarChart, Bar, ResponsiveContainer, XAxis, Tooltip,
+  BarChart, Bar, Cell, ResponsiveContainer, XAxis, Tooltip,
 } from 'recharts'
 import {
   Radio, MapPin, Smartphone, ShieldCheck, ShieldAlert, Zap,
@@ -117,7 +117,7 @@ export default function Insights({ frames, data, error, fromCache, refreshing, g
                 />
                 <Bar dataKey="value" radius={[4, 4, 0, 0]}>
                   {meta.chart.map((c, i) => (
-                    <CellGlow key={i} kind={c.kind} />
+                    <Cell key={i} fill={c.kind === 'nowcast' ? '#fbbf24' : '#8b5cf6'} />
                   ))}
                 </Bar>
               </BarChart>
@@ -209,11 +209,6 @@ function ReadinessCard({ icon, title, ok, okLabel, badLabel }) {
       </div>
     </GlassCard>
   )
-}
-
-function CellGlow({ kind }) {
-  const fill = kind === 'nowcast' ? '#fbbf24' : '#8b5cf6'
-  return <rect fill={fill} />
 }
 
 function deriveMeta(frames, data) {

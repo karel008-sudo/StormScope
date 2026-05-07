@@ -32,22 +32,49 @@ export const RAINVIEWER_PROVIDER = {
 
 /**
  * Fetch & normalize RainViewer metadata.
- * Throws on network / parse errors so caller can react.
+ * Throws on network / parse / timeout errors so caller can react.
+ *
+ * @param {AbortSignal} [signal] caller's abort signal (e.g. unmount)
+ * @param {{ timeoutMs?: number }} [opts] timeout for slow networks (default 8 s)
  */
-export async function fetchRainviewerMetadata(signal) {
-  const res = await fetch(RAINVIEWER_ENDPOINT, {
-    signal,
-    cache: 'no-cache',
-    credentials: 'omit',
-  })
-  if (!res.ok) {
-    throw new Error(`RainViewer metadata HTTP ${res.status}`)
+export async function fetchRainviewerMetadata(signal, { timeoutMs = 8_000 } = {}) {
+  const timeoutCtrl = new AbortController()
+  const timer = setTimeout(() => timeoutCtrl.abort(new Error('timeout')), timeoutMs)
+  // Compose caller signal + timeout signal — abort on either
+  const onAbort = () => timeoutCtrl.abort()
+  if (signal) {
+    if (signal.aborted) timeoutCtrl.abort()
+    else signal.addEventListener('abort', onAbort, { once: true })
   }
-  const data = await res.json()
-  if (!data || typeof data !== 'object') {
-    throw new Error('RainViewer metadata: invalid response body')
+  try {
+    const res = await fetch(RAINVIEWER_ENDPOINT, {
+      signal: timeoutCtrl.signal,
+      cache: 'no-cache',
+      credentials: 'omit',
+    })
+    if (!res.ok) {
+      throw new Error(`RainViewer metadata HTTP ${res.status}`)
+    }
+    const data = await res.json()
+    if (!data || typeof data !== 'object') {
+      throw new Error('RainViewer metadata: invalid response body')
+    }
+    return normalize(data)
+  } catch (e) {
+    if (e?.name === 'AbortError') {
+      // surface timeout vs caller-cancel
+      const reason = timeoutCtrl.signal.reason
+      if (reason && reason.message === 'timeout') {
+        const wrapped = new Error('RainViewer metadata: timed out')
+        wrapped.name = 'TimeoutError'
+        throw wrapped
+      }
+    }
+    throw e
+  } finally {
+    clearTimeout(timer)
+    if (signal) signal.removeEventListener('abort', onAbort)
   }
-  return normalize(data)
 }
 
 /**

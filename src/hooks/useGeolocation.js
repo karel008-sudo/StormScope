@@ -17,13 +17,15 @@ export function useGeolocation({ autoRestoreCached = true } = {}) {
   const [error, setError] = useState(null)
   const watchIdRef = useRef(null)
 
-  // Restore cached location for instant centering
+  // Restore cached location for instant centering — only if a fresh fix has
+  // not already been written by request()/watch(). Without this guard, the
+  // cached resolve can race ahead and overwrite a fresh GPS fix.
   useEffect(() => {
     if (!autoRestoreCached) return
     let mounted = true
     loadLastLocation().then((p) => {
       if (!mounted || !p) return
-      setPosition({ lat: p.lat, lng: p.lng, accuracy: null, ts: p.savedAt, cached: true })
+      setPosition((prev) => prev || { lat: p.lat, lng: p.lng, accuracy: null, ts: p.savedAt, cached: true })
     })
     return () => { mounted = false }
   }, [autoRestoreCached])

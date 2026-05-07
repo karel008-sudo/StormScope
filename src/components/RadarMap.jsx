@@ -68,7 +68,10 @@ export default function RadarMap({
 
       {tileUrl && selectedFrame && (
         <TileLayer
-          key={selectedFrame.id}
+          // Key includes every URL-affecting prop so a Settings change
+          // (color, smooth, snow) actually rebuilds the layer instead of
+          // calling Leaflet's setUrl, which does not redraw cached tiles.
+          key={tileUrl}
           url={tileUrl}
           opacity={opacity}
           zIndex={400}

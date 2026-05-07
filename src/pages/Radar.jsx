@@ -6,6 +6,8 @@ import LocationButton from '../components/LocationButton.jsx'
 import IntensityLegend from '../components/IntensityLegend.jsx'
 import PermissionState from '../components/PermissionState.jsx'
 import GlassCard from '../components/GlassCard.jsx'
+import { OFFLINE_BANNER_HEIGHT } from '../components/OfflineBanner.jsx'
+import { useOnline } from '../hooks/useOnline.js'
 import { CloudOff, MapPin } from 'lucide-react'
 import { DEFAULT_CENTER } from '../constants.js'
 
@@ -24,6 +26,8 @@ export default function Radar({
   onRequestLocation,
 }) {
   const [showPermission, setShowPermission] = useState(false)
+  const online = useOnline()
+  const headerOffset = online ? 0 : OFFLINE_BANNER_HEIGHT
 
   useEffect(() => {
     if (geo.status === 'denied' || geo.status === 'error' || geo.status === 'unsupported') {
@@ -58,14 +62,14 @@ export default function Radar({
       <div
         className="absolute top-0 left-0 right-0 pointer-events-none"
         style={{
-          height: 'calc(env(safe-area-inset-top, 0px) + 110px)',
+          height: `calc(env(safe-area-inset-top, 0px) + ${110 + headerOffset}px)`,
           background:
             'linear-gradient(to bottom, rgba(11,11,17,0.92) 0%, rgba(11,11,17,0.55) 55%, rgba(11,11,17,0) 100%)',
         }}
       />
       <header
         className="absolute left-0 right-0 px-3 fade-in"
-        style={{ top: 'calc(env(safe-area-inset-top, 8px) + 8px)' }}
+        style={{ top: `calc(env(safe-area-inset-top, 8px) + 8px + ${headerOffset}px)` }}
       >
         <StatusCard
           provider="RainViewer"
@@ -82,7 +86,7 @@ export default function Radar({
       {/* Right-side toolset (legend) */}
       <div
         className="absolute right-3 pointer-events-none"
-        style={{ top: 'calc(env(safe-area-inset-top, 8px) + 130px)' }}
+        style={{ top: `calc(env(safe-area-inset-top, 8px) + 130px + ${headerOffset}px)` }}
       >
         <IntensityLegend />
       </div>

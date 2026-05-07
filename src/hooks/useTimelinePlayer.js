@@ -89,23 +89,45 @@ export function useTimelinePlayer(frames, { speed = 'normal' } = {}) {
     })
   }, [frames])
 
-  // Playback engine
+  // Playback engine — pauses while document is hidden to save battery and
+  // avoid throttled-interval drift on iOS PWA standalone.
   useEffect(() => {
     if (!isPlaying) return
     if (!frames || frames.length === 0) return
-    const id = setInterval(() => {
+
+    let id = null
+    const tick = () => {
       setIndexState((i) => {
         const next = (i + 1) % frames.length
         const nextFrame = frames[next]
-        // Subtle haptic when crossing past→nowcast boundary
         if (nextFrame && nextFrame.type !== lastTickedTypeRef.current) {
           if (nextFrame.type === 'nowcast') haptic.stormPulse()
           lastTickedTypeRef.current = nextFrame.type
         }
         return next
       })
-    }, interval)
-    return () => clearInterval(id)
+    }
+    const start = () => { if (id == null) id = setInterval(tick, interval) }
+    const stop  = () => { if (id != null) { clearInterval(id); id = null } }
+
+    const onVis = () => {
+      if (typeof document === 'undefined') return
+      if (document.visibilityState === 'visible') start()
+      else stop()
+    }
+
+    if (typeof document === 'undefined' || document.visibilityState === 'visible') {
+      start()
+    }
+    if (typeof document !== 'undefined') {
+      document.addEventListener('visibilitychange', onVis)
+    }
+    return () => {
+      stop()
+      if (typeof document !== 'undefined') {
+        document.removeEventListener('visibilitychange', onVis)
+      }
+    }
   }, [isPlaying, frames, interval])
 
   const selected = frames && frames.length > 0 ? frames[Math.min(index, frames.length - 1)] : null
