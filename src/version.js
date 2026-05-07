@@ -9,9 +9,17 @@
 //                    items can be plain strings or { label, kind } where
 //                    kind ∈ 'new' | 'fix' | 'change' | 'remove'
 
-export const APP_VERSION = '0.3.1'
+export const APP_VERSION = '0.3.2'
 
 export const RELEASE_NOTES = [
+  {
+    version: '0.3.2',
+    date: '2026-05-07',
+    title: 'No more "Zoom Level Not Supported" tiles',
+    items: [
+      { kind: 'fix', label: 'Set Leaflet maxNativeZoom=7 on the RainViewer radar layer. RainViewer\'s free public tile API only returns real radar tiles up to z=7 (verified empirically — at z≥8 it returns a grey "Zoom Level Not Supported" placeholder PNG). Leaflet now requests z=7 tiles at any user zoom and upscales them, so you see a blurry-but-real radar overlay instead of grey tiles when zoomed in to city / street level.' },
+    ],
+  },
   {
     version: '0.3.1',
     date: '2026-05-07',

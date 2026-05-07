@@ -76,7 +76,12 @@ export default function RadarMap({
           url={tileUrl}
           opacity={opacity}
           zIndex={400}
-          maxNativeZoom={10}
+          // RainViewer's free tier returns real radar tiles only up to z=7
+          // (verified empirically — z>=8 returns a "Zoom Level Not Supported"
+          // placeholder PNG). With maxNativeZoom=7, Leaflet stops requesting
+          // higher-z tiles and upscales the z=7 raster instead, so the user
+          // sees a blurry-but-real overlay instead of a grey placeholder.
+          maxNativeZoom={7}
           maxZoom={19}
         />
       )}
