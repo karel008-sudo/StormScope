@@ -23,14 +23,18 @@ A premium mobile-first PWA built as a sibling to [Wingman](https://github.com/ka
 
 ```bash
 npm install
-npm run dev      # http://localhost:5173
-npm run build    # → dist/
-npm run preview  # production preview
-npm run lint     # ESLint
-npm test         # Vitest (provider + utils)
+npm run dev          # http://localhost:5173
+npm run build        # → dist/  (vite, base = /StormScope/)
+npm run preview      # http://localhost:4173/StormScope/
+npm run lint         # ESLint
+npm test             # Vitest (provider + utils)
+npm run test:e2e     # Playwright smoke (Chromium-mobile)
+npm run deploy       # ./deploy.sh — build + force-push to gh-pages
 ```
 
 Requires Node 18+ (tested on 20+ and 24).
+
+> **Dev URL note** — the dev server still serves at the root (`http://localhost:5173/`) because the dev `base` is bypassed. The production preview (and the Pages deploy) serve under the `/StormScope/` subpath.
 
 ## Data sources
 
@@ -112,26 +116,66 @@ tests/
 
 Glass cards use `backdrop-filter: blur()`, hairline borders, no solid backgrounds. Bottom nav has an animated underline indicator. iOS safe-area is handled with `env(safe-area-inset-*)` everywhere it matters.
 
-## Deployment (Netlify)
+## Deployment (GitHub Pages)
 
-`netlify.toml` is included. Drop the repo into Netlify, build command `npm run build`, publish directory `dist`. SPA fallback to `/index.html` is configured. Service-worker file is sent with `no-cache` so updates ship reliably (especially on iOS).
+StormScope deploys to **`https://karel008-sudo.github.io/StormScope/`** via the
+`gh-pages` branch of this same repo (Wingman convention). Vite builds with
+`base: '/StormScope/'` so all asset paths and the PWA manifest's
+`scope`/`start_url` resolve under that subpath.
 
-```toml
-[build]
-  command = "npm run build"
-  publish = "dist"
+### One-shot deploy
 
-[[headers]]                      # SW must never be cached
-  for = "/sw.js"
-  [headers.values]
-    Cache-Control = "no-cache, no-store, must-revalidate"
+```bash
+npm run deploy            # = ./deploy.sh
+# Builds, copies dist/ → fresh git on gh-pages, force-pushes.
+# Token resolution:
+#   1. GH_TOKEN env var, or
+#   2. gh CLI (gh auth token) — already authenticated as karel008-sudo
 ```
+
+The script also writes:
+- `dist/404.html` (copy of `index.html`) — SPA fallback so deep links work on Pages
+- `dist/.nojekyll` — disables Jekyll processing of the `_assets/` directory
+
+### First-time setup (only once per repo)
+
+After the first `npm run deploy`:
+1. Visit https://github.com/karel008-sudo/StormScope/settings/pages
+2. **Source** → **Deploy from a branch**
+3. **Branch** → `gh-pages` / `(root)` → **Save**
+4. Wait ~30 s, then `https://karel008-sudo.github.io/StormScope/` is live.
 
 ## PWA install (iOS Safari)
 
-1. Open the deployed URL in Safari (not Chrome on iOS — Chrome on iOS lacks PWA install).
+1. Open `https://karel008-sudo.github.io/StormScope/` in Safari (not Chrome on iOS — Chrome on iOS lacks PWA install).
 2. Tap **Share** → **Add to Home Screen**.
 3. Open the new icon — StormScope launches in standalone mode (no browser chrome). Status bar is translucent dark.
+
+## Developer / admin mode
+
+StormScope ships hidden developer tools, gated by an admin flag stored in
+`localStorage` under `stormscope:admin`. Two ways to unlock:
+
+| Method | Use when |
+|---|---|
+| **Tap the version label 7× within 3 s** (Settings → very bottom: *"StormScope · v0.1"*) | On a real device. Tapping again 7× disables. |
+| **`?admin=1` query param** (e.g. `…/StormScope/?admin=1`) | QA / e2e tests / quick desktop unlock. `?admin=0` disables. |
+
+When admin mode is active, **Settings → Developer** appears with:
+
+- **Dev logs** — full-screen viewer over Settings. Shows the most recent 300 of up to 500 persisted log entries (Dexie-backed). Filter by All / Errors / Warns / Info / Debug. Tap any row to expand structured data. Buttons: **Export JSON**, **Clear all**.
+- **Force update** — clears every Cache Storage entry, unregisters all service workers, busts the SW reload cooldown, and reloads. Use after a deploy if the PWA seems stuck on stale assets.
+- **Build info** — version, mode, user-agent.
+
+Logging is wired globally:
+
+- Every `logger.info|warn|error|debug(category, message, data)` call goes to console **and** persists in `db.logs`
+- `window.onerror` and `window.unhandledrejection` are captured so crashes show up in Dev logs even if devtools were closed
+- The store rotates at 500 entries; oldest are pruned
+
+Admin mode survives reloads, force updates, and PWA reinstalls (it lives in
+`localStorage`, not in IndexedDB). Resetting all settings does **not** disable
+it — explicitly tap 7× again or pass `?admin=0`.
 
 ## Real device QA checklist (iPhone)
 
@@ -178,9 +222,9 @@ Run through this list after every meaningful deploy.
 - [ ] Color scheme chip change reflects immediately on the radar overlay (a fresh tile layer rebuilds)
 
 **Update after new deployment**
-- [ ] On Netlify, push a new commit and let it deploy
+- [ ] Run `npm run deploy` from your machine — `gh-pages` branch is force-pushed
 - [ ] Open the already-installed PWA on the phone — within seconds the new SW activates and the page silently reloads (controllerchange handler with 60 s cooldown guard, so no reload loop)
-- [ ] If you need to force it: force-quit + relaunch
+- [ ] If it's stuck: enable admin mode (Settings → tap version 7×) → **Force update**, or force-quit + relaunch
 
 **Visual polish**
 - [ ] Status card text is legible at the very top (no notch overlap)
@@ -197,7 +241,10 @@ On iOS Safari: Settings → Safari → Location → Allow. On Chrome desktop: cl
 Hard-reload the page (Cmd-Shift-R). The `SizeKeeper` hook calls `invalidateSize()` on tab switches, orientation changes, and visibility changes, so this should be rare. If it persists, your network is probably blocking `*.basemaps.cartocdn.com` — check devtools Network tab.
 
 **Service worker stuck on old version (iOS)**
-The app uses `registerType: 'autoUpdate'` and `updateViaCache: 'none'` (set in `src/main.jsx`). On iOS, force it: open the app, swipe up to background, force-quit, relaunch — the new SW activates. Or visit `/?reload=1` to bypass cache once.
+The app uses `registerType: 'autoUpdate'` and `updateViaCache: 'none'` (set in `src/main.jsx`). On iOS, force it three ways:
+1. Enable admin mode (tap the version label 7× in Settings) → **Force update** button — nukes caches, unregisters SW, reloads.
+2. Force-quit the standalone app and relaunch.
+3. Open the deployed URL in mobile Safari and pull down to refresh.
 
 **Offline behavior**
 After the first online load, the app shell + last RainViewer metadata are cached. The `OfflineBanner` appears when `navigator.onLine === false`. The radar overlay falls back to whatever tiles were already in the runtime cache.
@@ -211,7 +258,7 @@ RainViewer's free `nowcast` array is sometimes empty. This is a provider quirk, 
 |---|---|
 | `npm run lint` | **0 errors, 0 warnings** (ESLint flat config + react + react-hooks) |
 | `npm test` | **26 unit tests** (provider normalization edge cases, tile URL, isStale, time/format helpers) |
-| `npm run test:e2e` | **8 Playwright smoke tests** on Pixel 7 mobile viewport — app loads, map visible, nav switches, settings persist after reload, geo-denied does not crash, empty nowcast handled, timeline renders, manifest+SW served |
+| `npm run test:e2e` | **10 Playwright smoke tests** on Pixel 7 mobile viewport — app loads, map visible, nav switches, settings persist after reload, geo-denied does not crash, empty nowcast handled, timeline renders, manifest+SW served, admin mode unlocks Developer section, Dev logs view opens & shows entries |
 | `npm run build` | clean — initial JS chunk 458 KB (143 KB gzip), Insights lazy-loaded as a separate 371 KB chunk (104 KB gzip) |
 | Lighthouse PWA | manifest valid, service worker installed, maskable icon present |
 

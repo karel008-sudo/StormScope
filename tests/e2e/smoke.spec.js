@@ -123,9 +123,39 @@ test('timeline renders past frame rows even without forecast', async ({ page }) 
 })
 
 test('production preview serves manifest and service worker', async ({ page }) => {
-  const meta = await page.request.get('/manifest.webmanifest')
+  // baseURL already includes the /StormScope/ prefix — relative requests
+  // automatically point at the GH Pages subpath.
+  const meta = await page.request.get('manifest.webmanifest')
   expect(meta.status()).toBe(200)
   expect(meta.headers()['content-type']).toContain('manifest+json')
-  const sw = await page.request.get('/sw.js')
+  const sw = await page.request.get('sw.js')
   expect(sw.status()).toBe(200)
+})
+
+test('admin mode unlocks Developer section via ?admin=1', async ({ page }) => {
+  await page.goto('?admin=1')
+  await page.waitForSelector('.leaflet-container')
+  await page.getByRole('button', { name: 'Settings' }).click()
+  await expect(page.locator('[data-testid="developer-section"]')).toBeVisible()
+  await expect(page.locator('[data-testid="open-dev-logs"]')).toBeVisible()
+  await expect(page.locator('[data-testid="force-update"]')).toBeVisible()
+})
+
+test('Dev logs view opens, shows entries, supports back', async ({ page }) => {
+  await page.goto('?admin=1')
+  await page.waitForSelector('.leaflet-container')
+  await page.getByRole('button', { name: 'Settings' }).click()
+  await page.locator('[data-testid="open-dev-logs"]').click()
+
+  // The dialog mounts and the heading reads "Dev Logs"
+  await expect(page.getByRole('dialog', { name: 'Dev logs' })).toBeVisible()
+  await expect(page.getByText('Dev Logs', { exact: true })).toBeVisible()
+
+  // The SW registration emits at least one info entry — counter > 0
+  // (counter renders as "N entries · max 500")
+  await expect(page.getByText(/entries · max 500/)).toBeVisible()
+
+  // Back button returns to Settings
+  await page.getByRole('button', { name: 'Back to settings' }).click()
+  await expect(page.getByRole('heading', { name: 'Settings' })).toBeVisible()
 })

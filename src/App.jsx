@@ -13,11 +13,14 @@ import GlassCard from './components/GlassCard.jsx'
 
 // Insights pulls in Recharts (~150 KB) — only load when user opens the tab.
 const Insights = lazy(() => import('./pages/Insights.jsx'))
+// LogViewer is admin-only; lazy-load so non-admin users never download it.
+const LogViewer = lazy(() => import('./pages/LogViewer.jsx'))
 
 const TABS = ['radar', 'timeline', 'insights', 'settings']
 
 export default function App() {
   const [tab, setTab] = useState('radar')
+  const [subView, setSubView] = useState(null) // null | 'logs'
   const [splashDone, setSplashDone] = useState(false)
   const { settings, update, reset, ready: settingsReady } = usePersistentSettings()
   const geo = useGeolocation()
@@ -104,9 +107,24 @@ export default function App() {
             settings={settings}
             onUpdate={update}
             onReset={reset}
+            onOpenLogs={() => setSubView('logs')}
           />
         )}
       </AppShell>
+
+      {subView === 'logs' && (
+        <div
+          className="fixed inset-0 z-[1200] overflow-y-auto fade-in"
+          style={{ background: '#0b0b11' }}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Dev logs"
+        >
+          <Suspense fallback={<TabLoading label="Opening dev logs…" />}>
+            <LogViewer onBack={() => setSubView(null)} />
+          </Suspense>
+        </div>
+      )}
     </>
   )
 }

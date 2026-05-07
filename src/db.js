@@ -2,9 +2,15 @@ import Dexie from 'dexie'
 
 export const db = new Dexie('StormScope')
 
+// v1: kv only
 db.version(1).stores({
-  // simple key/value bag for app-wide settings & ephemeral cache
   kv: 'key',
+})
+
+// v2: + logs (Wingman-style logger backing store)
+db.version(2).stores({
+  kv: 'key',
+  logs: '++id, timestamp, level, category',
 })
 
 const SETTINGS_KEY = 'settings'

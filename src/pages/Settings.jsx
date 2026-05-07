@@ -1,10 +1,49 @@
-import { Settings as SettingsIcon, Info, RotateCcw } from 'lucide-react'
+import { useState } from 'react'
+import {
+  Settings as SettingsIcon, Info, RotateCcw, Terminal, RefreshCw, ShieldCheck, KeyRound,
+} from 'lucide-react'
 import GlassCard from '../components/GlassCard.jsx'
 import ColorSchemePicker from '../components/ColorSchemePicker.jsx'
 import { haptic } from '../haptic.js'
 import { RAINVIEWER_PROVIDER } from '../providers/rainviewerProvider.js'
+import { useAdmin } from '../hooks/useAdmin.js'
+import { logger } from '../logger.js'
+import { forceUpdateApp } from '../utils/forceUpdate.js'
 
-export default function Settings({ settings, onUpdate, onReset }) {
+const APP_VERSION = '0.1'
+const BUILD_INFO = `Build ${import.meta.env.MODE}`
+
+export default function Settings({ settings, onUpdate, onReset, onOpenLogs }) {
+  const { admin, register: registerVersionTap, tapsRequired } = useAdmin()
+  const [tapHint, setTapHint] = useState(null) // 'enabled' | 'disabled' | 'tap' transient feedback
+  const [updating, setUpdating] = useState(false)
+
+  const handleVersionTap = () => {
+    const result = registerVersionTap()
+    if (result === 'enabled') {
+      haptic.success()
+      setTapHint('enabled')
+      logger.info('admin', 'Developer mode enabled')
+      setTimeout(() => setTapHint(null), 1800)
+    } else if (result === 'disabled') {
+      haptic.warning()
+      setTapHint('disabled')
+      logger.info('admin', 'Developer mode disabled')
+      setTimeout(() => setTapHint(null), 1800)
+    } else {
+      haptic.selection()
+    }
+  }
+
+  const handleForceUpdate = async () => {
+    if (updating) return
+    setUpdating(true)
+    haptic.warning()
+    logger.warn('admin', 'Force update requested')
+    await forceUpdateApp({ logger })
+    // page reload happens inside forceUpdateApp
+  }
+
   return (
     <div
       className="px-4 fade-in"
@@ -174,18 +213,116 @@ export default function Settings({ settings, onUpdate, onReset }) {
         Reset all settings
       </button>
 
-      <div className="h-8 text-center" style={{ color: '#3f3f46', fontSize: 10 }}>
-        StormScope · v0.1 · Made with care
-      </div>
+      {admin && (
+        <>
+          <div className="h-3" />
+          <SectionTitle accent="#a78bfa">Developer</SectionTitle>
+          <GlassCard
+            strong
+            className="px-3.5 py-3 space-y-2"
+            data-testid="developer-section"
+          >
+            <div className="flex items-center gap-2 mb-1.5">
+              <ShieldCheck size={14} style={{ color: '#a78bfa' }} />
+              <div style={{ color: '#ddd6fe', fontSize: 12, fontWeight: 700, letterSpacing: 0.2 }}>
+                Admin mode active
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => { haptic.selection(); onOpenLogs && onOpenLogs() }}
+              className="w-full rounded-xl px-3 py-2.5 inline-flex items-center justify-between transition-all active:scale-[0.99]"
+              style={{
+                background: 'rgba(255,255,255,0.04)',
+                border: '1px solid rgba(255,255,255,0.10)',
+                color: '#f8f8ff',
+                fontSize: 13,
+                fontWeight: 600,
+                minHeight: 44,
+              }}
+              data-testid="open-dev-logs"
+            >
+              <span className="inline-flex items-center gap-2">
+                <Terminal size={14} style={{ color: '#22d3ee' }} />
+                Dev logs
+              </span>
+              <span style={{ color: '#71717a', fontSize: 11 }}>captured locally</span>
+            </button>
+            <button
+              type="button"
+              onClick={handleForceUpdate}
+              disabled={updating}
+              className="w-full rounded-xl px-3 py-2.5 inline-flex items-center justify-between transition-all active:scale-[0.99] disabled:opacity-60"
+              style={{
+                background: 'rgba(245,158,11,0.10)',
+                border: '1px solid rgba(245,158,11,0.35)',
+                color: '#fbbf24',
+                fontSize: 13,
+                fontWeight: 700,
+                minHeight: 44,
+              }}
+              data-testid="force-update"
+            >
+              <span className="inline-flex items-center gap-2">
+                <RefreshCw size={14} className={updating ? 'animate-spin' : ''} />
+                {updating ? 'Updating…' : 'Force update'}
+              </span>
+              <span style={{ color: '#a1a1aa', fontSize: 10.5, fontWeight: 500 }}>
+                clears caches + SW
+              </span>
+            </button>
+            <div
+              className="rounded-xl px-3 py-2 mt-1 text-[11px]"
+              style={{
+                background: 'rgba(0,0,0,0.35)',
+                border: '1px solid rgba(255,255,255,0.06)',
+                color: '#a1a1aa',
+                lineHeight: 1.45,
+              }}
+            >
+              <div className="flex items-center gap-1.5 mb-1" style={{ color: '#71717a' }}>
+                <KeyRound size={11} />
+                <span className="uppercase tracking-widest font-bold" style={{ fontSize: 9 }}>
+                  Build info
+                </span>
+              </div>
+              <div className="font-mono">version: {APP_VERSION} · {BUILD_INFO}</div>
+              <div className="font-mono">user-agent: {typeof navigator !== 'undefined' ? navigator.userAgent.slice(0, 40) + '…' : '—'}</div>
+              <div className="mt-1" style={{ color: '#52525b' }}>
+                Tap version below {tapsRequired}× to disable Developer mode.
+              </div>
+            </div>
+          </GlassCard>
+        </>
+      )}
+
+      <button
+        type="button"
+        onClick={handleVersionTap}
+        className="block mx-auto mt-8 mb-4"
+        style={{
+          color: tapHint === 'enabled' ? '#a78bfa' : tapHint === 'disabled' ? '#fbbf24' : '#3f3f46',
+          fontSize: 10,
+          letterSpacing: 0.6,
+          background: 'transparent',
+          padding: '6px 12px',
+          transition: 'color 0.2s',
+        }}
+        aria-label={admin ? 'Tap to toggle Developer mode' : 'Tap 7 times to enable Developer mode'}
+      >
+        StormScope · v{APP_VERSION}
+        {tapHint === 'enabled' && ' · developer mode on'}
+        {tapHint === 'disabled' && ' · developer mode off'}
+      </button>
     </div>
   )
 }
 
-function SectionTitle({ children }) {
+function SectionTitle({ children, accent = '#71717a' }) {
   return (
     <div
       className="text-[10px] uppercase tracking-widest font-bold mb-1.5 mt-1"
-      style={{ color: '#71717a' }}
+      style={{ color: accent }}
     >
       {children}
     </div>

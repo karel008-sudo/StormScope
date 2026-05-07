@@ -2,7 +2,37 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.jsx'
 import ErrorBoundary from './components/ErrorBoundary.jsx'
+import { db } from './db.js'
+import { initLogger, logger } from './logger.js'
 import './index.css'
+
+// Wire the persistent logger to Dexie before any subsystem starts emitting.
+initLogger(db)
+
+// Capture global errors into the persistent log so the LogViewer (admin
+// dev tools) can surface them later, even if devtools weren't open.
+if (typeof window !== 'undefined') {
+  window.addEventListener('unhandledrejection', (event) => {
+    const reason = event.reason
+    logger.error('global', 'Unhandled promise rejection', {
+      message: reason?.message ?? String(reason),
+      stack: reason?.stack?.slice(0, 600),
+    })
+  })
+  const prevOnerror = window.onerror
+  window.onerror = (message, source, lineno, colno, error) => {
+    logger.error('global', 'Uncaught JS error', {
+      message: typeof message === 'string' ? message : String(message),
+      source,
+      lineno,
+      colno,
+      stack: error?.stack?.slice(0, 600),
+    })
+    if (typeof prevOnerror === 'function') {
+      try { return prevOnerror(message, source, lineno, colno, error) } catch {}
+    }
+  }
+}
 
 // Service worker — manual registration so we can:
 //   1. set updateViaCache: 'none' (forces iOS to refetch sw.js every load)
@@ -11,8 +41,6 @@ import './index.css'
 if ('serviceWorker' in navigator && import.meta.env.PROD) {
   const RELOAD_KEY = 'stormscope:lastSWReload'
   const COOLDOWN_MS = 60_000
-  // True at the moment of script execution = there was already a SW controlling
-  // this page = next controllerchange means a NEW worker took over.
   const wasControlled = !!navigator.serviceWorker.controller
 
   const safeReadTs = () => {
@@ -33,22 +61,26 @@ if ('serviceWorker' in navigator && import.meta.env.PROD) {
     const last = safeReadTs()
     const elapsed = Date.now() - last
     if (last && elapsed < COOLDOWN_MS) {
-      // We just reloaded recently — refuse another reload to break any loop.
-      // The user can still pull-to-refresh manually.
+      logger.warn('sw', 'controllerchange suppressed (cooldown)', { elapsed })
       return
     }
     reloading = true
     safeWriteTs(Date.now())
+    logger.info('sw', 'controllerchange — reloading for new build')
     window.location.reload()
   })
 
   window.addEventListener('load', () => {
+    // Vite serves the SW under the configured base — use BASE_URL so it
+    // works on GitHub Pages subpath deploys.
+    const swUrl = `${import.meta.env.BASE_URL}sw.js`
     navigator.serviceWorker
-      .register('/sw.js', { updateViaCache: 'none' })
+      .register(swUrl, { updateViaCache: 'none' })
       .then((reg) => {
+        logger.info('sw', 'Service worker registered', { scope: reg.scope })
         try { reg.update() } catch {}
       })
-      .catch(() => {})
+      .catch((err) => logger.error('sw', 'SW registration failed', { message: err.message }))
   })
 }
 

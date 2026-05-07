@@ -3,8 +3,12 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 
+// GitHub Pages deploys at https://karel008-sudo.github.io/StormScope/
+// All asset URLs need this prefix; PWA manifest scope/start_url match.
+const BASE = '/StormScope/'
+
 export default defineConfig({
-  base: '/',
+  base: BASE,
   plugins: [
     react(),
     tailwindcss(),
@@ -56,8 +60,8 @@ export default defineConfig({
         background_color: '#0b0b11',
         display: 'standalone',
         orientation: 'portrait-primary',
-        scope: '/',
-        start_url: '/',
+        scope: BASE,
+        start_url: BASE,
         categories: ['weather', 'utilities', 'navigation'],
         icons: [
           { src: 'pwa-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },

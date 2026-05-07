@@ -1,6 +1,8 @@
 import { defineConfig, devices } from '@playwright/test'
 
 const PORT = 4173
+// Must match `base` in vite.config.js — vite preview serves under this prefix.
+const BASE_PATH = '/StormScope/'
 
 export default defineConfig({
   testDir: './tests/e2e',
@@ -14,7 +16,7 @@ export default defineConfig({
   expect: { timeout: 8_000 },
 
   use: {
-    baseURL: `http://localhost:${PORT}`,
+    baseURL: `http://localhost:${PORT}${BASE_PATH}`,
     headless: true,
     viewport: { width: 390, height: 844 }, // iPhone 14 Pro size
     locale: 'en-US',
@@ -33,9 +35,9 @@ export default defineConfig({
   ],
 
   webServer: {
-    // Build first so the preview serves the latest dist/.
+    // Build first so the preview serves the latest dist/ at the BASE_PATH prefix.
     command: 'npm run build && npm run preview',
-    url: `http://localhost:${PORT}`,
+    url: `http://localhost:${PORT}${BASE_PATH}`,
     reuseExistingServer: !process.env.CI,
     timeout: 180_000,
     stdout: 'ignore',
