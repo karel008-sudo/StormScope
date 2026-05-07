@@ -198,13 +198,14 @@ export default function Radar({
         </div>
       </div>
 
-      {/* Locate FAB (Google-Maps style) — placed AFTER the bottom stack so it
-          stacks above any cards in the bottom container that might overlap. */}
+      {/* Locate FAB (Google-Maps style, with caption) — placed AFTER the
+          bottom stack so it stacks above any overlapping cards. The caption
+          beneath the icon makes the control unmissable on a dark map. */}
       <div
         className="absolute right-3"
         style={{
           zIndex: 30,
-          bottom: 'calc(58px + env(safe-area-inset-bottom, 0px) + 12px + 184px)',
+          bottom: 'calc(58px + env(safe-area-inset-bottom, 0px) + 12px + 200px)',
         }}
       >
         <LocateFab

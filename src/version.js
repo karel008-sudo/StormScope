@@ -9,9 +9,19 @@
 //                    items can be plain strings or { label, kind } where
 //                    kind ∈ 'new' | 'fix' | 'change' | 'remove'
 
-export const APP_VERSION = '0.2.0'
+export const APP_VERSION = '0.3.0'
 
 export const RELEASE_NOTES = [
+  {
+    version: '0.3.0',
+    date: '2026-05-07',
+    title: 'Cinematic intro + unmissable Locate button',
+    items: [
+      { kind: 'new', label: 'New cinematic intro splash on app open: rotating radar sweep, animated rings, lightning bolt centerpiece, app name + tagline staggered reveal. Honors prefers-reduced-motion.' },
+      { kind: 'change', label: 'Locate control made obvious: bigger 60 px FAB, animated pulse ring when no fix yet, and a permanent caption beneath ("Locate me" / "Locating…" / "Center on me" / "Permission needed") so it cannot be missed on a dark map.' },
+      { kind: 'fix', label: 'Splash now waits ~1.6 s minimum so the intro feels intentional rather than a flicker, with a 3 s ceiling so it never blocks the app.' },
+    ],
+  },
   {
     version: '0.2.0',
     date: '2026-05-07',
