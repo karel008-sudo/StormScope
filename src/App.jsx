@@ -5,7 +5,6 @@ import Radar from './pages/Radar.jsx'
 import Timeline from './pages/Timeline.jsx'
 import Settings from './pages/Settings.jsx'
 import WhatsNewSheet from './components/WhatsNewSheet.jsx'
-import Splash from './components/Splash.jsx'
 import { usePersistentSettings } from './hooks/usePersistentSettings.js'
 import { useGeolocation } from './hooks/useGeolocation.js'
 import { useRainViewerFrames } from './hooks/useRainViewerFrames.js'
@@ -77,6 +76,23 @@ export default function App() {
     return () => clearTimeout(t)
   }, [])
 
+  // Splash teardown: the splash is the inline #boot-splash <div> in
+  // index.html — it's been animating since HTML parse, before React even
+  // mounted. Once we're ready, fade it out smoothly and remove it from the
+  // DOM. Doing it this way (instead of mounting a React <Splash /> on top)
+  // avoids the visual jump that comes from two independent CSS animation
+  // timelines running side-by-side for a frame.
+  useEffect(() => {
+    if (!splashDone) return
+    const boot = document.getElementById('boot-splash')
+    if (!boot) return
+    boot.classList.add('is-fading')
+    const t = setTimeout(() => {
+      boot.parentNode && boot.parentNode.removeChild(boot)
+    }, 360)
+    return () => clearTimeout(t)
+  }, [splashDone])
+
   // Apply reduce-motion preference at body level when user toggles it
   useEffect(() => {
     if (typeof document === 'undefined') return
@@ -92,7 +108,6 @@ export default function App() {
 
   return (
     <>
-      {!splashDone && <Splash />}
       <OfflineBanner />
       <AppShell
         tab={tab}

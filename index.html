@@ -13,8 +13,142 @@
     <link rel="apple-touch-icon" href="./pwa-192.png" />
     <link rel="manifest" href="./manifest.webmanifest" />
     <title>StormScope</title>
+    <!--
+      Critical boot CSS — inlined so the splash paints immediately after HTML
+      parse, without waiting for src/index.css to download or React to mount.
+      Keep visually IDENTICAL to <Splash /> in src/components/Splash.jsx so
+      the React handoff has zero visual jump (handoff = React Splash mounts
+      on top of #boot-splash, then JS removes #boot-splash on next frame).
+    -->
+    <style>
+      html, body { background: #0b0b11; margin: 0; padding: 0; }
+      body { color-scheme: dark; }
+      #boot-splash {
+        position: fixed; inset: 0;
+        z-index: 2000;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        background: radial-gradient(ellipse at center, #1a0b2e 0%, #0b0b11 70%);
+        overflow: hidden;
+        contain: strict;
+      }
+      #boot-splash.is-fading { animation: splashFadeOut 320ms ease-out forwards; }
+      #boot-splash .glow {
+        position: absolute;
+        width: 240px; height: 240px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(139,92,246,0.45) 0%, rgba(34,211,238,0.18) 40%, transparent 75%);
+        filter: blur(24px);
+        will-change: opacity, transform;
+        transform: translateZ(0);
+        animation: splashGlow 2.4s ease-in-out infinite;
+      }
+      #boot-splash .disc {
+        position: relative;
+        width: 168px; height: 168px;
+        border-radius: 50%;
+        background: radial-gradient(circle at center, rgba(11,11,17,0.92) 0%, rgba(11,11,17,0.4) 60%, transparent 100%);
+        border: 1px solid rgba(139,92,246,0.45);
+        box-shadow: 0 30px 80px rgba(139,92,246,0.35), inset 0 0 30px rgba(139,92,246,0.18);
+        animation: splashRise 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        will-change: transform, opacity;
+        overflow: hidden;            /* clip the sweep instead of CSS mask */
+        transform: translateZ(0);
+      }
+      #boot-splash .ring {
+        position: absolute;
+        top: 50%; left: 50%;
+        border-radius: 50%;
+        border: 1px solid rgba(255,255,255,0.18);
+        opacity: 0;
+        will-change: transform, opacity;
+        transform: translateZ(0);
+      }
+      #boot-splash .ring.r1 { width: 150px; height: 150px; margin: -75px 0 0 -75px; animation: splashRingIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) 120ms forwards; }
+      #boot-splash .ring.r2 { width: 108px; height: 108px; margin: -54px 0 0 -54px; animation: splashRingIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) 180ms forwards; }
+      #boot-splash .ring.r3 { width: 66px;  height: 66px;  margin: -33px 0 0 -33px; animation: splashRingIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) 240ms forwards; }
+      #boot-splash .sweep {
+        position: absolute; inset: 0;
+        background: conic-gradient(from 270deg, rgba(139,92,246,0.55) 0deg, rgba(139,92,246,0.25) 25deg, transparent 90deg);
+        animation: splashSweep 2.2s linear infinite;
+        will-change: transform;
+        transform: translateZ(0);
+      }
+      #boot-splash .bolt {
+        position: absolute;
+        top: 50%; left: 50%;
+        opacity: 0;
+        animation: splashBoltIn 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) 0.18s forwards;
+        filter: drop-shadow(0 4px 12px rgba(251,191,36,0.65));
+        will-change: opacity, transform;
+      }
+      #boot-splash .name {
+        margin-top: 28px;
+        color: #f8f8ff;
+        font: 800 26px/1.05 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        letter-spacing: -0.5px;
+        opacity: 0;
+        animation: splashTextIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.32s forwards;
+        will-change: opacity, transform;
+      }
+      #boot-splash .tag {
+        margin-top: 6px;
+        color: #a1a1aa;
+        font: 500 12.5px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        letter-spacing: 0.3px;
+        opacity: 0;
+        animation: splashTextIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.5s forwards;
+        will-change: opacity, transform;
+      }
+      #boot-splash .progress {
+        position: absolute;
+        bottom: calc(env(safe-area-inset-bottom, 0px) + 56px);
+        left: 50%; transform: translateX(-50%);
+        width: 84px; height: 3px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, transparent, rgba(139,92,246,0.85), rgba(34,211,238,0.85), transparent);
+        background-size: 200% 100%;
+        opacity: 0.85;
+        animation: splashProgress 1.6s linear infinite;
+        will-change: background-position;
+      }
+      /* Splash keyframes are duplicated here so the boot splash works even if
+         src/index.css hasn't loaded yet. They're kept identical to the ones
+         in src/index.css. */
+      @keyframes splashRise { from { opacity: 0; transform: translate3d(0,8px,0) scale(0.92); } to { opacity: 1; transform: translate3d(0,0,0) scale(1); } }
+      @keyframes splashSweep { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+      @keyframes splashBoltIn { from { opacity: 0; transform: translate(-50%, -50%) scale(0.6); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+      @keyframes splashTextIn { from { opacity: 0; transform: translate3d(0,10px,0); } to { opacity: 1; transform: translate3d(0,0,0); } }
+      @keyframes splashRingIn { from { opacity: 0; transform: scale(0.6); } to { opacity: 1; transform: scale(1); } }
+      @keyframes splashGlow { 0%,100% { opacity: 0.55; transform: scale(0.92); } 50% { opacity: 0.95; transform: scale(1.05); } }
+      @keyframes splashProgress { 0% { background-position: 100% 0; } 100% { background-position: -100% 0; } }
+      @keyframes splashFadeOut { to { opacity: 0; visibility: hidden; } }
+      @media (prefers-reduced-motion: reduce) {
+        #boot-splash * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; }
+      }
+    </style>
   </head>
   <body>
+    <!-- Boot splash: paints immediately after HTML parse, before React mounts.
+         React's <Splash /> renders identical visuals on top, then App.jsx
+         removes #boot-splash on next frame for zero-jump handoff. -->
+    <div id="boot-splash" aria-label="StormScope is starting" role="status" aria-live="polite">
+      <div class="glow" aria-hidden="true"></div>
+      <div class="disc">
+        <div class="ring r1" aria-hidden="true"></div>
+        <div class="ring r2" aria-hidden="true"></div>
+        <div class="ring r3" aria-hidden="true"></div>
+        <div class="sweep" aria-hidden="true"></div>
+        <svg class="bolt" width="56" height="56" viewBox="0 0 64 64" fill="none" aria-hidden="true" style="margin: -28px 0 0 -28px;">
+          <path d="M34 10 L20 38 L29 38 L24 56 L46 26 L36 26 Z" fill="#fbbf24" />
+          <path d="M34 10 L20 38 L29 38 L24 56 L46 26 L36 26 Z" fill="none" stroke="rgba(180,100,20,0.85)" stroke-width="0.6" stroke-linejoin="round" />
+        </svg>
+      </div>
+      <div class="name">StormScope</div>
+      <div class="tag">Live radar around you</div>
+      <div class="progress" aria-hidden="true"></div>
+    </div>
+
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

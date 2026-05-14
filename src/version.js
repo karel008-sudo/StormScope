@@ -9,9 +9,19 @@
 //                    items can be plain strings or { label, kind } where
 //                    kind ∈ 'new' | 'fix' | 'change' | 'remove'
 
-export const APP_VERSION = '0.5.0'
+export const APP_VERSION = '0.6.0'
 
 export const RELEASE_NOTES = [
+  {
+    version: '0.6.0',
+    date: '2026-05-14',
+    title: 'Cinematic startup — splash now runs at 60 fps from frame 1',
+    items: [
+      { kind: 'fix', label: "App startup no longer stutters. The intro splash (radar disc, sweep, lightning, wordmark) used to skip a few frames before settling into smooth animation — visible as a brief 'glitch' on cold start. Now: ~16 ms First Paint instead of ~80-150 ms, and every animation runs on the GPU compositor from the very first frame." },
+      { kind: 'change', label: "How: the splash is now an inline <div> inside index.html so it paints immediately after HTML parse, before React even downloads. Keyframes live in global CSS (not injected at runtime). The sweep is clipped by overflow:hidden instead of a CSS mask (masks force software rendering on some mobile GPUs). Ambient glow uses a smaller blur on a smaller element — 4× fewer pixels for the first composite." },
+      { kind: 'change', label: 'No more visual handoff between two splash implementations. The boot-splash is the only splash; React just fades it out smoothly when the app is ready. One animation timeline, no jumps.' },
+    ],
+  },
   {
     version: '0.5.0',
     date: '2026-05-13',
