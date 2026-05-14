@@ -27,6 +27,7 @@ export default function Radar({
   geo,
   settings,
   visible,
+  providerLabel = 'RainViewer',
   onRequestLocation,
 }) {
   const [showPermission, setShowPermission] = useState(false)
@@ -149,7 +150,7 @@ export default function Radar({
         }}
       >
         <StatusCard
-          provider="RainViewer"
+          provider={providerLabel}
           pastCount={data?.pastCount || 0}
           nowcastCount={data?.nowcastCount || 0}
           generatedAt={data?.generatedAt}

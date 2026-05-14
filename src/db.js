@@ -27,6 +27,11 @@ export const DEFAULT_SETTINGS = {
   hapticsEnabled: true,
   preferredColor: 2,        // RainViewer color scheme (0..8)
   reduceMotion: false,
+  // Use ČHMÚ CZRAD radar over the Czech Republic instead of RainViewer.
+  // When on AND user is inside the CZ data bbox, the timeline + overlay
+  // switch to ČHMÚ (5-min cadence + 60-min nowcast). Outside CZ the toggle
+  // is silently ignored — RainViewer is the only sensible source there.
+  chmiEnabled: true,
 }
 
 export async function loadSettings() {

@@ -1,16 +1,26 @@
 import { useEffect, useMemo, useRef } from 'react'
-import { MapContainer, TileLayer, useMap } from 'react-leaflet'
+import { MapContainer, TileLayer, ImageOverlay, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import {
   BASEMAP_URL,
   BASEMAP_ATTRIBUTION,
+  CHMI_DATA_BBOX,
   DEFAULT_CENTER,
   DEFAULT_ZOOM,
 } from '../constants.js'
 import { buildTileUrl, RAINVIEWER_PROVIDER } from '../providers/rainviewerProvider.js'
+import { CHMI_PROVIDER } from '../providers/chmiProvider.js'
 import { shimLeafletIcons } from '../utils/map.js'
 
 shimLeafletIcons()
+
+// Leaflet bounds for the ČHMÚ ImageOverlay. Computed once outside the
+// component so React doesn't reallocate on every render (which would force
+// Leaflet to tear down + rebuild the overlay).
+const CHMI_LEAFLET_BOUNDS = [
+  [CHMI_DATA_BBOX.south, CHMI_DATA_BBOX.west],
+  [CHMI_DATA_BBOX.north, CHMI_DATA_BBOX.east],
+]
 
 /**
  * RadarMap — Leaflet shell with:
@@ -36,18 +46,29 @@ export default function RadarMap({
   color = 2,
   visible = true,
   recenterToken = 0,
+  // ČHMÚ overlay: drawn ABOVE the RainViewer tile layer when a ČHMÚ frame
+  // is selected. selectedFrame.provider distinguishes which one is active;
+  // when chmi-active we still render the (lower-z) RainViewer base so areas
+  // outside CZ stay populated.
 }) {
   const mapCenter = useMemo(() => center || DEFAULT_CENTER, [center])
+
+  const isChmi = selectedFrame?.provider === 'chmi'
+  const chmiUrl = isChmi && selectedFrame?.url ? selectedFrame.url : null
+
+  // RainViewer tile URL. Skip when the active frame is a ČHMÚ one — there's
+  // nothing meaningful to compose against, and RainViewer would just show a
+  // mismatched timestamp under the ČHMÚ overlay.
   const tileUrl = useMemo(
     () =>
-      host && selectedFrame
+      !isChmi && host && selectedFrame
         ? buildTileUrl(host, selectedFrame, {
             color,
             smooth: smooth ? 1 : 0,
             snow: snow ? 1 : 0,
           })
         : null,
-    [host, selectedFrame, color, smooth, snow],
+    [isChmi, host, selectedFrame, color, smooth, snow],
   )
 
   return (
@@ -73,7 +94,9 @@ export default function RadarMap({
     >
       <TileLayer
         url={BASEMAP_URL}
-        attribution={`${BASEMAP_ATTRIBUTION} · ${RAINVIEWER_PROVIDER.attribution}`}
+        attribution={`${BASEMAP_ATTRIBUTION} · ${
+          isChmi ? CHMI_PROVIDER.attribution : RAINVIEWER_PROVIDER.attribution
+        }`}
         subdomains={['a', 'b', 'c', 'd']}
         maxZoom={19}
       />
@@ -94,6 +117,25 @@ export default function RadarMap({
           // sees a blurry-but-real overlay instead of a grey placeholder.
           maxNativeZoom={7}
           maxZoom={19}
+        />
+      )}
+
+      {chmiUrl && (
+        <ImageOverlay
+          // Key on URL so React tears down + rebuilds the overlay on every
+          // frame change. Leaflet's ImageOverlay has no setUrl analog that
+          // forces a clean redraw; remounting is cheap here (~10 KB PNG).
+          key={chmiUrl}
+          url={chmiUrl}
+          bounds={CHMI_LEAFLET_BOUNDS}
+          opacity={opacity}
+          // Above the RainViewer tile (zIndex=400) so when both happen to
+          // be visible (e.g. mid-toggle) ČHMÚ wins inside CZ.
+          zIndex={500}
+          attribution={CHMI_PROVIDER.attribution}
+          // crossOrigin=anonymous lets the browser cache the PNG without
+          // tainting the canvas, which we may want later for crossfade.
+          crossOrigin="anonymous"
         />
       )}
 

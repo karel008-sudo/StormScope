@@ -1,0 +1,103 @@
+name: chmi-poll
+
+# Poll ČHMÚ open-data radar every 10 min, process the PNGs, and force-push
+# the result as a single orphan commit to the chmi-data branch. The frontend
+# reads from there via jsDelivr (CORS=*, edge-cached). No secrets, no
+# external accounts — only the auto-injected GITHUB_TOKEN.
+#
+# Cron lag note (called out in chmi-poller/README.md): GitHub Actions
+# schedule events run with median ~5 min delay, occasionally up to ~30 min
+# at peak load. Net steady-state freshness on the frontend is 5..30 min.
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'   # every 10 minutes
+  workflow_dispatch: {}      # manual fire from the Actions tab
+  push:
+    branches: [main]
+    paths:
+      - 'chmi-poller/**'
+      - '.github/workflows/chmi-poll.yml'
+
+permissions:
+  contents: write   # push to chmi-data branch
+
+concurrency:
+  group: chmi-poll
+  cancel-in-progress: false   # never kill a publish mid-flight
+
+jobs:
+  poll:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: main
+
+      - name: Checkout chmi-data branch (existing frames for dedup)
+        uses: actions/checkout@v4
+        continue-on-error: true   # branch may not exist on first run
+        with:
+          ref: chmi-data
+          path: chmi-data
+          fetch-depth: 1
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: main/chmi-poller/package-lock.json
+
+      - name: Install poller deps
+        working-directory: main/chmi-poller
+        run: npm ci
+
+      - name: Run poller
+        working-directory: main/chmi-poller
+        run: |
+          mkdir -p ../../out
+          EXISTING_ARG=""
+          if [ -d "${{ github.workspace }}/chmi-data" ] && [ -f "${{ github.workspace }}/chmi-data/index.json" ]; then
+            EXISTING_ARG="--existing-dir ${{ github.workspace }}/chmi-data"
+          fi
+          node poll.mjs --out "${{ github.workspace }}/out" $EXISTING_ARG
+
+      - name: Show poller status
+        run: |
+          echo "=== STATUS.txt ==="
+          cat "${{ github.workspace }}/out/STATUS.txt"
+          echo "=== frames count ==="
+          ls "${{ github.workspace }}/out/frames" | wc -l
+          echo "=== total size ==="
+          du -sh "${{ github.workspace }}/out"
+
+      - name: Publish to chmi-data branch (orphan force-push)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd "${{ github.workspace }}/out"
+          git init -q -b chmi-data
+          git config user.email "actions@github.com"
+          git config user.name  "chmi-poller (GitHub Actions)"
+          # Single readme so the branch is human-navigable on github.com.
+          cat > README.md <<'EOF'
+          # chmi-data
+
+          Auto-published radar frames + index.json for the StormScope ČHMÚ overlay.
+
+          - **Source:** Czech Hydrometeorological Institute open data
+            (https://opendata.chmi.cz/)
+          - **Cadence:** rebuilt every ~10 minutes by `.github/workflows/chmi-poll.yml`
+          - **Format:** `frames/<sha8>.png` (598×381, EPSG:3857, transparent
+            background) + `index.json` (latest 144 past + 6 forecast frames)
+          - **Consumer:** the StormScope frontend via jsDelivr.
+
+          This branch is force-pushed on every poll — do not commit by hand.
+          EOF
+          git add -A
+          git commit -q -m "chmi-poll @ $(date -u +%Y-%m-%dT%H:%MZ)"
+          git push -f "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git" chmi-data:chmi-data

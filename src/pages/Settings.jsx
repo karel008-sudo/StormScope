@@ -7,6 +7,7 @@ import GlassCard from '../components/GlassCard.jsx'
 import ColorSchemePicker from '../components/ColorSchemePicker.jsx'
 import { haptic } from '../haptic.js'
 import { RAINVIEWER_PROVIDER } from '../providers/rainviewerProvider.js'
+import { CHMI_PROVIDER } from '../providers/chmiProvider.js'
 import { useAdmin } from '../hooks/useAdmin.js'
 import { logger } from '../logger.js'
 import { forceUpdateApp } from '../utils/forceUpdate.js'
@@ -104,6 +105,12 @@ export default function Settings({
       <SectionTitle>Layers</SectionTitle>
       <GlassCard strong className="px-3.5 py-3 space-y-3">
         <ToggleRow
+          label="Czech radar (ČHMÚ)"
+          desc="Use the official ČHMÚ CZRAD composite over Czechia (5-min cadence + 60-min nowcast). Outside CZ: silently falls back to RainViewer."
+          value={settings.chmiEnabled}
+          onChange={(v) => onUpdate({ chmiEnabled: v })}
+        />
+        <ToggleRow
           label="Smooth radar"
           desc="Anti-aliased tiles for cleaner motion"
           value={settings.smoothRadar}
@@ -123,7 +130,7 @@ export default function Settings({
         />
         <ColorSchemePicker
           label="Color scheme"
-          desc="RainViewer palette for storm intensity"
+          desc="RainViewer palette for storm intensity (ignored when ČHMÚ is active — its palette is fixed)"
           value={settings.preferredColor}
           onChange={(v) => onUpdate({ preferredColor: v })}
         />
@@ -241,6 +248,11 @@ export default function Settings({
       <SectionTitle>Data sources</SectionTitle>
       <GlassCard strong className="px-3.5 py-3 space-y-2">
         <Attribution
+          name="ČHMÚ (CZRAD)"
+          desc={CHMI_PROVIDER.limitations}
+          link="https://opendata.chmi.cz/"
+        />
+        <Attribution
           name="RainViewer"
           desc={RAINVIEWER_PROVIDER.limitations}
           link="https://www.rainviewer.com/"
@@ -260,26 +272,6 @@ export default function Settings({
           desc="Dark Matter tile style — © CARTO."
           link="https://carto.com/attributions"
         />
-        <div
-          className="rounded-xl px-3 py-2 mt-1"
-          style={{
-            background: 'rgba(139,92,246,0.10)',
-            border: '1px dashed rgba(139,92,246,0.35)',
-            color: '#c4b5fd',
-            fontSize: 11.5,
-            lineHeight: 1.4,
-          }}
-        >
-          <div
-            className="font-bold uppercase tracking-widest text-[9px] mb-0.5"
-            style={{ color: '#a78bfa' }}
-          >
-            Coming soon
-          </div>
-          ČHMÚ / CZRAD provider planned via backend proxy — 5-min cadence,
-          +60 min nowcast, ~7 days of history over Czech Republic. Blitzortung
-          lightning archive overlay also planned.
-        </div>
       </GlassCard>
 
       <div className="h-3" />

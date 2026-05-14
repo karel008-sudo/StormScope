@@ -9,9 +9,20 @@
 //                    items can be plain strings or { label, kind } where
 //                    kind ∈ 'new' | 'fix' | 'change' | 'remove'
 
-export const APP_VERSION = '0.4.0'
+export const APP_VERSION = '0.5.0'
 
 export const RELEASE_NOTES = [
+  {
+    version: '0.5.0',
+    date: '2026-05-13',
+    title: 'Czech radar (ČHMÚ CZRAD) overlay over Czechia',
+    items: [
+      { kind: 'new', label: "Native ČHMÚ CZRAD radar layer over the Czech Republic — 5-minute cadence + 60-minute nowcast in 10-min steps. Cropped exactly to the official data area (E 11.27°-19.62° / N 48.05°-51.46°), aligned to EPSG:3857. Auto-enabled if you're inside CZ; outside, it falls back to RainViewer silently." },
+      { kind: 'new', label: "Settings → Layers → 'Czech radar (ČHMÚ)' toggle. Default ON. The status card and map attribution swap between '© ČHMÚ' and 'RainViewer' based on what's actually showing." },
+      { kind: 'new', label: 'No backend, no API key, no account: a GitHub Action polls ČHMÚ open data every ~10 min, processes the PNGs (white→transparent + label/legend trim), and force-pushes them to a chmi-data branch. Frontend reads via jsDelivr (CORS-friendly, edge-cached).' },
+      { kind: 'change', label: "Honest about lag: GitHub Actions schedule events run with median ~5 min delay, occasionally ~30 min at peak. Net steady-state freshness on screen is 5-30 min — still beats RainViewer's ~10 min over CZ." },
+    ],
+  },
   {
     version: '0.4.0',
     date: '2026-05-07',

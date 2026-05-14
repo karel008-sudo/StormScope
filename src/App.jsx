@@ -9,9 +9,12 @@ import Splash from './components/Splash.jsx'
 import { usePersistentSettings } from './hooks/usePersistentSettings.js'
 import { useGeolocation } from './hooks/useGeolocation.js'
 import { useRainViewerFrames } from './hooks/useRainViewerFrames.js'
+import { useChmiFrames } from './hooks/useChmiFrames.js'
 import { useTimelinePlayer } from './hooks/useTimelinePlayer.js'
 import { useVersionGate } from './hooks/useVersionGate.js'
 import { haptic } from './haptic.js'
+import { isInsideChmiCoverage } from './providers/chmiProvider.js'
+import { DEFAULT_CENTER } from './constants.js'
 import GlassCard from './components/GlassCard.jsx'
 
 // Insights pulls in Recharts (~150 KB) — only load when user opens the tab.
@@ -27,12 +30,34 @@ export default function App() {
   const [splashDone, setSplashDone] = useState(false)
   const { settings, update, reset, ready: settingsReady } = usePersistentSettings()
   const geo = useGeolocation()
-  const {
-    data, loading, refreshing, error, fromCache, stale, lastFetchAt,
-  } = useRainViewerFrames()
+
+  const rv = useRainViewerFrames()
+
+  // ČHMÚ wins over RainViewer when (a) the user opted in via Settings AND
+  // (b) they're physically inside the CZ data bbox (or no fix yet, in which
+  // case we tentatively enable since DEFAULT_CENTER = Prague).
+  const userPos = geo.position
+    ? { lat: geo.position.lat, lng: geo.position.lng }
+    : { lat: DEFAULT_CENTER[0], lng: DEFAULT_CENTER[1] }
+  const userInCz = isInsideChmiCoverage(userPos)
+  const chmiActive = !!settings.chmiEnabled && userInCz
+  const chmi = useChmiFrames({ enabled: chmiActive })
+
+  // If ČHMÚ is the active source AND it actually delivered frames, use it.
+  // Otherwise fall back to RainViewer (which is always running). The fallback
+  // is silent — the user just sees RainViewer with a hint in StatusCard.
+  const useChmi = chmiActive && chmi.data && chmi.data.frames.length > 0
+  const data       = useChmi ? chmi.data        : rv.data
+  const loading    = useChmi ? chmi.loading     : rv.loading
+  const refreshing = useChmi ? chmi.refreshing  : rv.refreshing
+  const error      = useChmi ? chmi.error       : rv.error
+  const fromCache  = useChmi ? chmi.fromCache   : rv.fromCache
+  const stale      = useChmi ? chmi.stale       : rv.stale
+  const lastFetchAt = useChmi ? chmi.lastFetchAt : rv.lastFetchAt
 
   const frames = data?.frames ?? []
   const player = useTimelinePlayer(frames, { speed: settings.playbackSpeed })
+  const providerLabel = useChmi ? 'ČHMÚ (CZRAD)' : 'RainViewer'
   const version = useVersionGate()
 
   // Splash dwell: minimum visible time so the intro feels intentional, not a
@@ -88,6 +113,7 @@ export default function App() {
             geo={geo}
             settings={settings}
             visible={tab === 'radar'}
+            providerLabel={providerLabel}
             onRequestLocation={() => geo.request()}
           />
         </div>

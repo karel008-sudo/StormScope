@@ -17,6 +17,32 @@ export const RAINVIEWER_SNOW = 1
 // How often to refresh metadata when app is foreground (ms)
 export const METADATA_REFRESH_MS = 5 * 60 * 1000
 
+// ČHMÚ provider — index.json + cropped PNGs published every ~10 min by the
+// chmi-poller GitHub Action to the `chmi-data` branch of the same repo.
+// Frontend consumes via jsDelivr (CORS=*, edge-cached, ~7 day cache).
+//
+// CHMI_INDEX_URL points at the live index. The frames it references are
+// already absolute jsDelivr URLs, so the frontend never needs to know the
+// base URL — it just trusts what the poller wrote.
+export const CHMI_INDEX_URL =
+  'https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/index.json'
+
+// Fallback when jsDelivr is having a bad day (it caches aggressively but
+// occasionally lags by minutes after a force-push — direct GitHub raw is
+// CORS-friendly too and always fresh).
+export const CHMI_INDEX_URL_FALLBACK =
+  'https://raw.githubusercontent.com/karel008-sudo/StormScope/chmi-data/index.json'
+
+// Geographical bounds of the ČHMÚ data area (matches CHMI_DATA_BBOX in the
+// poller). Used to (a) place the Leaflet ImageOverlay and (b) decide
+// whether the user is "in coverage" so the provider badge can swap.
+export const CHMI_DATA_BBOX = {
+  west:  11.267,
+  east:  19.624,
+  south: 48.047,
+  north: 51.458,
+}
+
 // Timeline player defaults
 export const DEFAULT_PLAYBACK_INTERVAL_MS = 650
 export const PLAYBACK_INTERVALS_MS = {

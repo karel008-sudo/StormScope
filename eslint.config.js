@@ -4,7 +4,16 @@ import reactHooks from 'eslint-plugin-react-hooks'
 import globals from 'globals'
 
 export default [
-  { ignores: ['dist/', 'dev-dist/', 'node_modules/', 'public/', 'playwright-report/', 'test-results/'] },
+  {
+    ignores: [
+      'dist/', 'dev-dist/', 'node_modules/', 'public/',
+      'playwright-report/', 'test-results/',
+      // chmi-poller is a self-contained Node 20 ESM project run by GitHub
+      // Actions; it has its own dependency tree and is not part of the
+      // frontend lint scope.
+      'chmi-poller/',
+    ],
+  },
   js.configs.recommended,
   {
     files: ['**/*.{js,jsx}'],
