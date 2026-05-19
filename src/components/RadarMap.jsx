@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef } from 'react'
-import { MapContainer, TileLayer, ImageOverlay, useMap } from 'react-leaflet'
+import { MapContainer, TileLayer, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import {
   BASEMAP_URL,
@@ -17,21 +17,28 @@ shimLeafletIcons()
 // Leaflet bounds for the ČHMÚ ImageOverlay. Computed once outside the
 // component so React doesn't reallocate on every render (which would force
 // Leaflet to tear down + rebuild the overlay).
-const CHMI_LEAFLET_BOUNDS = [
+const CHMI_LEAFLET_BOUNDS = L.latLngBounds(
   [CHMI_DATA_BBOX.south, CHMI_DATA_BBOX.west],
   [CHMI_DATA_BBOX.north, CHMI_DATA_BBOX.east],
-]
+)
 
 /**
  * RadarMap — Leaflet shell with:
  *   - dark Carto basemap
- *   - RainViewer radar tile overlay (current selected frame)
+ *   - RainViewer radar tile overlay OR ČHMÚ ImageOverlay (active provider)
  *   - animated user-location pulse (custom DOM marker)
  *
- * Robustness:
- *   - invalidateSize() on container resize and visibility change
- *   - re-centering only when location moves meaningfully
- *   - tile layer keyed by frame id so React reuses underlying Leaflet object
+ * Performance notes:
+ *   - Frame changes call `layer.setUrl(...)` instead of remounting the React
+ *     element. Remount used to trigger a full Leaflet teardown + retile on
+ *     every timeline tick (~650 ms during playback), which (a) discarded
+ *     all cached tiles and (b) made zoom-during-playback feel awful because
+ *     the network was constantly re-fetching the same tiles for a new URL.
+ *   - The active player is auto-paused while the user is mid-zoom-gesture,
+ *     so the browser has the whole frame budget for tile loading + smooth
+ *     zoom animation. It resumes on zoomend if the user was playing before.
+ *   - The next ČHMÚ frame is preloaded into the browser cache so the
+ *     visible swap is instant.
  */
 export default function RadarMap({
   center,
@@ -46,10 +53,13 @@ export default function RadarMap({
   color = 2,
   visible = true,
   recenterToken = 0,
-  // ČHMÚ overlay: drawn ABOVE the RainViewer tile layer when a ČHMÚ frame
-  // is selected. selectedFrame.provider distinguishes which one is active;
-  // when chmi-active we still render the (lower-z) RainViewer base so areas
-  // outside CZ stay populated.
+  // The full player object from useTimelinePlayer; used so the map can
+  // auto-pause playback when the user starts a zoom gesture. May be null.
+  player = null,
+  // All ČHMÚ frames currently in the timeline; the map preloads the next
+  // one into the browser cache for instant crossfade. Pass null/empty to
+  // skip preloading.
+  chmiFrames = null,
 }) {
   const mapCenter = useMemo(() => center || DEFAULT_CENTER, [center])
 
@@ -80,12 +90,11 @@ export default function RadarMap({
       style={{ width: '100%', height: '100%', background: '#0b0b11' }}
       worldCopyJump
       attributionControl
-      // Bound zoom: radar caps at z=7 native; allowing user past z=13 means
-      // the radar tile is upscaled 64×+ and Leaflet's CSS transform can flake
-      // out on iOS Safari standalone (visible as torn / blank tiles when
-      // pinching in). Capping at z=13 keeps both layers stable and the radar
-      // still readable.
-      maxZoom={13}
+      // Cap at 18 (street level) — CARTO basemap stays crisp, while both
+      // radar layers (RainViewer maxNative=7, ČHMÚ ~1 km/px) are
+      // necessarily upscaled and blurry beyond ~z=10. Past z=18, Leaflet's
+      // CSS transform on upscaled radars can flake on iOS Safari standalone.
+      maxZoom={18}
       minZoom={3}
       bounceAtZoomLimits={false}
       // iOS double-tap-to-zoom-out (Leaflet's default 'tap' handler) can
@@ -99,45 +108,22 @@ export default function RadarMap({
         }`}
         subdomains={['a', 'b', 'c', 'd']}
         maxZoom={19}
+        // Cache more tiles outside the viewport so panning + zooming is
+        // smoother (default keepBuffer=2 is conservative).
+        keepBuffer={4}
       />
 
-      {tileUrl && selectedFrame && (
-        <TileLayer
-          // Key includes every URL-affecting prop so a Settings change
-          // (color, smooth, snow) actually rebuilds the layer instead of
-          // calling Leaflet's setUrl, which does not redraw cached tiles.
-          key={tileUrl}
-          url={tileUrl}
-          opacity={opacity}
-          zIndex={400}
-          // RainViewer's free tier returns real radar tiles only up to z=7
-          // (verified empirically — z>=8 returns a "Zoom Level Not Supported"
-          // placeholder PNG). With maxNativeZoom=7, Leaflet stops requesting
-          // higher-z tiles and upscales the z=7 raster instead, so the user
-          // sees a blurry-but-real overlay instead of a grey placeholder.
-          maxNativeZoom={7}
-          maxZoom={19}
-        />
-      )}
+      <RainViewerLayer
+        url={tileUrl}
+        opacity={opacity}
+        active={!isChmi}
+      />
 
-      {chmiUrl && (
-        <ImageOverlay
-          // Key on URL so React tears down + rebuilds the overlay on every
-          // frame change. Leaflet's ImageOverlay has no setUrl analog that
-          // forces a clean redraw; remounting is cheap here (~10 KB PNG).
-          key={chmiUrl}
-          url={chmiUrl}
-          bounds={CHMI_LEAFLET_BOUNDS}
-          opacity={opacity}
-          // Above the RainViewer tile (zIndex=400) so when both happen to
-          // be visible (e.g. mid-toggle) ČHMÚ wins inside CZ.
-          zIndex={500}
-          attribution={CHMI_PROVIDER.attribution}
-          // crossOrigin=anonymous lets the browser cache the PNG without
-          // tainting the canvas, which we may want later for crossfade.
-          crossOrigin="anonymous"
-        />
-      )}
+      <ChmiOverlay
+        url={chmiUrl}
+        opacity={opacity}
+        frames={chmiFrames}
+      />
 
       <UserPulseMarker position={userPosition} />
 
@@ -147,8 +133,195 @@ export default function RadarMap({
       )}
 
       <SizeKeeper visible={visible} />
+      <PlayerZoomGate player={player} />
     </MapContainer>
   )
+}
+
+/**
+ * RainViewer tile layer that updates URL in-place via `layer.setUrl(...)`
+ * instead of remounting. This keeps Leaflet's internal tile cache alive
+ * across timeline ticks, so playback doesn't thrash the network.
+ *
+ * The layer is hidden (removed from the map) when `active=false` instead of
+ * unmounted — switching between providers is then a single `addLayer` call.
+ */
+function RainViewerLayer({ url, opacity, active }) {
+  const map = useMap()
+  const layerRef = useRef(null)
+
+  // Create the Leaflet layer exactly once. Re-using the same layer across
+  // URL changes is the whole point.
+  useEffect(() => {
+    const layer = L.tileLayer('', {
+      opacity,
+      zIndex: 400,
+      // RainViewer's free tier returns real radar tiles only up to z=7
+      // (verified empirically — z>=8 returns a "Zoom Level Not Supported"
+      // placeholder PNG). With maxNativeZoom=7, Leaflet stops requesting
+      // higher-z tiles and upscales the z=7 raster instead.
+      maxNativeZoom: 7,
+      maxZoom: 19,
+      keepBuffer: 4,
+      // Only fetch new tiles after the user lets go — no flicker mid-pinch
+      // (Leaflet keeps showing the previous zoom-level tiles, scaled,
+      // until the gesture settles).
+      updateWhenIdle: true,
+      updateWhenZooming: false,
+      // Smooth fade-in for newly-loaded tiles (Leaflet default; explicit
+      // here so we don't accidentally turn it off elsewhere).
+      fadeAnimation: true,
+    })
+    layerRef.current = layer
+    return () => {
+      try {
+        if (map.hasLayer(layer)) map.removeLayer(layer)
+      } catch {}
+      layerRef.current = null
+    }
+    // opacity is read here only as the initial value; live updates handled
+    // by the setOpacity effect below.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [map])
+
+  // Add / remove on the map as `active` flips.
+  useEffect(() => {
+    const layer = layerRef.current
+    if (!layer) return
+    if (active && url) {
+      if (!map.hasLayer(layer)) map.addLayer(layer)
+    } else if (map.hasLayer(layer)) {
+      map.removeLayer(layer)
+    }
+  }, [active, url, map])
+
+  // Push new URL into the existing layer — Leaflet re-tiles for the new URL
+  // but keeps its tile container, fade animation, and DOM nodes alive.
+  useEffect(() => {
+    const layer = layerRef.current
+    if (!layer || !url) return
+    try { layer.setUrl(url) } catch {}
+  }, [url])
+
+  // Push opacity changes without rebuilding.
+  useEffect(() => {
+    const layer = layerRef.current
+    if (!layer) return
+    try { layer.setOpacity(opacity) } catch {}
+  }, [opacity])
+
+  return null
+}
+
+/**
+ * ČHMÚ image overlay with the same in-place update pattern + N+1 preload.
+ *
+ * Why preload: switching ImageOverlay URLs replaces the underlying <img>
+ * src, which triggers a network fetch even for jsDelivr-cached files.
+ * Preloading the next frame's URL into the browser cache (via a hidden
+ * `new Image()`) means the swap is served from the disk cache and feels
+ * instant, even at the start of playback.
+ */
+function ChmiOverlay({ url, opacity, frames }) {
+  const map = useMap()
+  const layerRef = useRef(null)
+
+  useEffect(() => {
+    // Empty 1×1 transparent gif until a real URL arrives — Leaflet refuses
+    // to construct an ImageOverlay without a src.
+    const layer = L.imageOverlay(
+      'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
+      CHMI_LEAFLET_BOUNDS,
+      {
+        opacity,
+        zIndex: 500,
+        attribution: CHMI_PROVIDER.attribution,
+        crossOrigin: 'anonymous',
+        // Hide the placeholder gif until we set a real URL.
+        className: 'chmi-image-overlay',
+      },
+    )
+    layerRef.current = layer
+    return () => {
+      try { if (map.hasLayer(layer)) map.removeLayer(layer) } catch {}
+      layerRef.current = null
+    }
+    // opacity is initial-only; updates handled by setOpacity effect below.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [map])
+
+  useEffect(() => {
+    const layer = layerRef.current
+    if (!layer) return
+    if (url) {
+      if (!map.hasLayer(layer)) map.addLayer(layer)
+    } else if (map.hasLayer(layer)) {
+      map.removeLayer(layer)
+    }
+  }, [url, map])
+
+  useEffect(() => {
+    const layer = layerRef.current
+    if (!layer || !url) return
+    try { layer.setUrl(url) } catch {}
+  }, [url])
+
+  useEffect(() => {
+    const layer = layerRef.current
+    if (!layer) return
+    try { layer.setOpacity(opacity) } catch {}
+  }, [opacity])
+
+  // Preload the NEXT frame so the swap on next tick is cache-hit instant.
+  // Triggered any time the active URL changes (i.e. on every tick).
+  useEffect(() => {
+    if (!Array.isArray(frames) || frames.length === 0 || !url) return
+    const idx = frames.findIndex((f) => f && f.url === url)
+    if (idx < 0) return
+    const next = frames[(idx + 1) % frames.length]
+    if (!next || !next.url || next.url === url) return
+    const img = new Image()
+    img.decoding = 'async'
+    img.src = next.url
+    // No cleanup needed — once the browser starts the request, the cache
+    // fill happens regardless of whether we hold the Image object.
+  }, [url, frames])
+
+  return null
+}
+
+/**
+ * Auto-pause the timeline player while the user is mid-zoom-gesture so the
+ * browser has the whole frame budget for tile loading + smooth zoom
+ * animation. Resumes on zoomend ONLY if the user had it playing before.
+ */
+function PlayerZoomGate({ player }) {
+  const map = useMap()
+  const wasPlayingRef = useRef(false)
+
+  useEffect(() => {
+    if (!map || !player) return
+    const onZoomStart = () => {
+      wasPlayingRef.current = !!player.isPlaying
+      if (player.isPlaying) {
+        try { player.pause() } catch {}
+      }
+    }
+    const onZoomEnd = () => {
+      if (wasPlayingRef.current) {
+        wasPlayingRef.current = false
+        try { player.play() } catch {}
+      }
+    }
+    map.on('zoomstart', onZoomStart)
+    map.on('zoomend',   onZoomEnd)
+    return () => {
+      map.off('zoomstart', onZoomStart)
+      map.off('zoomend',   onZoomEnd)
+    }
+  }, [map, player])
+
+  return null
 }
 
 function UserPulseMarker({ position }) {

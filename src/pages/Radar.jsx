@@ -129,6 +129,8 @@ export default function Radar({
           color={settings.preferredColor}
           visible={visible}
           recenterToken={recenterToken}
+          player={player}
+          chmiFrames={frames.length && frames[0]?.provider === 'chmi' ? frames : null}
         />
       </div>
 

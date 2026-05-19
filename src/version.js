@@ -9,9 +9,21 @@
 //                    items can be plain strings or { label, kind } where
 //                    kind ∈ 'new' | 'fix' | 'change' | 'remove'
 
-export const APP_VERSION = '0.6.0'
+export const APP_VERSION = '0.6.1'
 
 export const RELEASE_NOTES = [
+  {
+    version: '0.6.1',
+    date: '2026-05-19',
+    title: 'Smooth zoom during playback + sharper basemap',
+    items: [
+      { kind: 'fix', label: "Pinching the map while the timeline was playing used to feel laggy — tiles took forever to load, the new zoom level was slow to sharpen. The cause: every timeline tick (~650 ms) was unmounting and rebuilding the radar layer, which discarded Leaflet's tile cache and forced the network to re-fetch the same tiles over and over. Now the layer updates in place via setUrl(), so the cache stays warm across ticks." },
+      { kind: 'change', label: 'Playback auto-pauses for the duration of your zoom gesture. Browser gets the whole frame budget for smooth zoom + tile loading, then playback resumes on its own when you let go (only if you had it playing).' },
+      { kind: 'change', label: "Zoom cap raised to 18 (was 13) — CARTO basemap stays sharp down to street names. Radar overlay is necessarily blurry past z=10 (both providers cap at ~1 km per pixel) but the basemap below is now crisp." },
+      { kind: 'change', label: 'ČHMÚ overlay preloads the next frame into the browser cache, so the visible swap on the next tick is instant — no flicker, no fetch latency.' },
+      { kind: 'change', label: 'Leaflet now keeps a wider tile buffer (4 rows/cols around the viewport, was 2) and only fetches new tiles after a zoom gesture settles, never during.' },
+    ],
+  },
   {
     version: '0.6.0',
     date: '2026-05-14',
