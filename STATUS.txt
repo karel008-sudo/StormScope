@@ -1,0 +1,12 @@
+StormScope ČHMÚ poller
+runAt:        2026-09-07T00:01:28.271Z
+pastCount:    144
+nowcastCount: 6
+oldestPast:   2026-09-06T12:05:00.000Z
+latestPast:   2026-09-07T00:00:00.000Z
+framesWritten: 27
+framesCopied:  123
+framesMissing: 0
+bbox:         [11.267,48.047,19.624,51.458]
+pixel:        {"width":598,"height":381}
+source:       https://opendata.chmi.cz/
