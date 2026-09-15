@@ -1,0 +1,1379 @@
+{
+  "schema": 2,
+  "generatedAt": 1789516434,
+  "bbox": [
+    11.267,
+    48.047,
+    19.624,
+    51.458
+  ],
+  "pixel": {
+    "width": 598,
+    "height": 381
+  },
+  "pastCount": 144,
+  "nowcastCount": 6,
+  "frames": [
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1155.0.png",
+      "type": "past",
+      "time": 1789473300,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1200.0.png",
+      "type": "past",
+      "time": 1789473600,
+      "leadMin": 0,
+      "sha": "f5aa1bed4010",
+      "sizeBytes": 731,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/f5aa1bed4010.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1205.0.png",
+      "type": "past",
+      "time": 1789473900,
+      "leadMin": 0,
+      "sha": "c41a0acb028b",
+      "sizeBytes": 731,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/c41a0acb028b.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1210.0.png",
+      "type": "past",
+      "time": 1789474200,
+      "leadMin": 0,
+      "sha": "fe2717407997",
+      "sizeBytes": 732,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/fe2717407997.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1215.0.png",
+      "type": "past",
+      "time": 1789474500,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1220.0.png",
+      "type": "past",
+      "time": 1789474800,
+      "leadMin": 0,
+      "sha": "8f8fa5904dd1",
+      "sizeBytes": 741,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/8f8fa5904dd1.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1225.0.png",
+      "type": "past",
+      "time": 1789475100,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1230.0.png",
+      "type": "past",
+      "time": 1789475400,
+      "leadMin": 0,
+      "sha": "f2bfc6a36331",
+      "sizeBytes": 740,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/f2bfc6a36331.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1235.0.png",
+      "type": "past",
+      "time": 1789475700,
+      "leadMin": 0,
+      "sha": "c3a4c950e8d7",
+      "sizeBytes": 731,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/c3a4c950e8d7.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1240.0.png",
+      "type": "past",
+      "time": 1789476000,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1245.0.png",
+      "type": "past",
+      "time": 1789476300,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1250.0.png",
+      "type": "past",
+      "time": 1789476600,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1255.0.png",
+      "type": "past",
+      "time": 1789476900,
+      "leadMin": 0,
+      "sha": "6375231dc001",
+      "sizeBytes": 753,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/6375231dc001.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1300.0.png",
+      "type": "past",
+      "time": 1789477200,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1305.0.png",
+      "type": "past",
+      "time": 1789477500,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1310.0.png",
+      "type": "past",
+      "time": 1789477800,
+      "leadMin": 0,
+      "sha": "fe1766f56fd4",
+      "sizeBytes": 743,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/fe1766f56fd4.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1315.0.png",
+      "type": "past",
+      "time": 1789478100,
+      "leadMin": 0,
+      "sha": "2aa282e21f82",
+      "sizeBytes": 731,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/2aa282e21f82.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1320.0.png",
+      "type": "past",
+      "time": 1789478400,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1325.0.png",
+      "type": "past",
+      "time": 1789478700,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1330.0.png",
+      "type": "past",
+      "time": 1789479000,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1335.0.png",
+      "type": "past",
+      "time": 1789479300,
+      "leadMin": 0,
+      "sha": "f0e7cb31ff3a",
+      "sizeBytes": 737,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/f0e7cb31ff3a.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1340.0.png",
+      "type": "past",
+      "time": 1789479600,
+      "leadMin": 0,
+      "sha": "f7eabfc5ccd9",
+      "sizeBytes": 742,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/f7eabfc5ccd9.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1345.0.png",
+      "type": "past",
+      "time": 1789479900,
+      "leadMin": 0,
+      "sha": "f168c0899da3",
+      "sizeBytes": 742,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/f168c0899da3.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1350.0.png",
+      "type": "past",
+      "time": 1789480200,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1355.0.png",
+      "type": "past",
+      "time": 1789480500,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1400.0.png",
+      "type": "past",
+      "time": 1789480800,
+      "leadMin": 0,
+      "sha": "24a5fd290366",
+      "sizeBytes": 731,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/24a5fd290366.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1405.0.png",
+      "type": "past",
+      "time": 1789481100,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1410.0.png",
+      "type": "past",
+      "time": 1789481400,
+      "leadMin": 0,
+      "sha": "c41a0acb028b",
+      "sizeBytes": 731,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/c41a0acb028b.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1415.0.png",
+      "type": "past",
+      "time": 1789481700,
+      "leadMin": 0,
+      "sha": "3e1dbfb39fde",
+      "sizeBytes": 747,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/3e1dbfb39fde.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1420.0.png",
+      "type": "past",
+      "time": 1789482000,
+      "leadMin": 0,
+      "sha": "14086c1850d4",
+      "sizeBytes": 750,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/14086c1850d4.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1425.0.png",
+      "type": "past",
+      "time": 1789482300,
+      "leadMin": 0,
+      "sha": "20dfdc281678",
+      "sizeBytes": 738,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/20dfdc281678.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1430.0.png",
+      "type": "past",
+      "time": 1789482600,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1435.0.png",
+      "type": "past",
+      "time": 1789482900,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1440.0.png",
+      "type": "past",
+      "time": 1789483200,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1445.0.png",
+      "type": "past",
+      "time": 1789483500,
+      "leadMin": 0,
+      "sha": "a1091a637bf9",
+      "sizeBytes": 750,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/a1091a637bf9.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1450.0.png",
+      "type": "past",
+      "time": 1789483800,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1455.0.png",
+      "type": "past",
+      "time": 1789484100,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1500.0.png",
+      "type": "past",
+      "time": 1789484400,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1505.0.png",
+      "type": "past",
+      "time": 1789484700,
+      "leadMin": 0,
+      "sha": "010ecae055f7",
+      "sizeBytes": 736,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/010ecae055f7.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1510.0.png",
+      "type": "past",
+      "time": 1789485000,
+      "leadMin": 0,
+      "sha": "c2fe6a657b58",
+      "sizeBytes": 738,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/c2fe6a657b58.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1515.0.png",
+      "type": "past",
+      "time": 1789485300,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1520.0.png",
+      "type": "past",
+      "time": 1789485600,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1525.0.png",
+      "type": "past",
+      "time": 1789485900,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1530.0.png",
+      "type": "past",
+      "time": 1789486200,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1535.0.png",
+      "type": "past",
+      "time": 1789486500,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1540.0.png",
+      "type": "past",
+      "time": 1789486800,
+      "leadMin": 0,
+      "sha": "36a309db77b4",
+      "sizeBytes": 738,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/36a309db77b4.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1545.0.png",
+      "type": "past",
+      "time": 1789487100,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1550.0.png",
+      "type": "past",
+      "time": 1789487400,
+      "leadMin": 0,
+      "sha": "7e1b5d408e7e",
+      "sizeBytes": 742,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/7e1b5d408e7e.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1555.0.png",
+      "type": "past",
+      "time": 1789487700,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1600.0.png",
+      "type": "past",
+      "time": 1789488000,
+      "leadMin": 0,
+      "sha": "640ae2cf4dca",
+      "sizeBytes": 734,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/640ae2cf4dca.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1605.0.png",
+      "type": "past",
+      "time": 1789488300,
+      "leadMin": 0,
+      "sha": "fff83b28c9e0",
+      "sizeBytes": 734,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/fff83b28c9e0.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1610.0.png",
+      "type": "past",
+      "time": 1789488600,
+      "leadMin": 0,
+      "sha": "dd5eaf806c8a",
+      "sizeBytes": 753,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/dd5eaf806c8a.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1615.0.png",
+      "type": "past",
+      "time": 1789488900,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1620.0.png",
+      "type": "past",
+      "time": 1789489200,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1625.0.png",
+      "type": "past",
+      "time": 1789489500,
+      "leadMin": 0,
+      "sha": "34b13a8caf77",
+      "sizeBytes": 731,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/34b13a8caf77.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1630.0.png",
+      "type": "past",
+      "time": 1789489800,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1635.0.png",
+      "type": "past",
+      "time": 1789490100,
+      "leadMin": 0,
+      "sha": "e7cde2e09153",
+      "sizeBytes": 746,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/e7cde2e09153.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1640.0.png",
+      "type": "past",
+      "time": 1789490400,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1645.0.png",
+      "type": "past",
+      "time": 1789490700,
+      "leadMin": 0,
+      "sha": "b4800204a6de",
+      "sizeBytes": 740,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/b4800204a6de.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1650.0.png",
+      "type": "past",
+      "time": 1789491000,
+      "leadMin": 0,
+      "sha": "da5666592583",
+      "sizeBytes": 740,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/da5666592583.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1655.0.png",
+      "type": "past",
+      "time": 1789491300,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1700.0.png",
+      "type": "past",
+      "time": 1789491600,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1705.0.png",
+      "type": "past",
+      "time": 1789491900,
+      "leadMin": 0,
+      "sha": "98473f72569c",
+      "sizeBytes": 734,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/98473f72569c.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1710.0.png",
+      "type": "past",
+      "time": 1789492200,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1715.0.png",
+      "type": "past",
+      "time": 1789492500,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1720.0.png",
+      "type": "past",
+      "time": 1789492800,
+      "leadMin": 0,
+      "sha": "e4d0a6cf455e",
+      "sizeBytes": 739,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/e4d0a6cf455e.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1725.0.png",
+      "type": "past",
+      "time": 1789493100,
+      "leadMin": 0,
+      "sha": "19cc2f78b30f",
+      "sizeBytes": 745,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/19cc2f78b30f.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1730.0.png",
+      "type": "past",
+      "time": 1789493400,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1735.0.png",
+      "type": "past",
+      "time": 1789493700,
+      "leadMin": 0,
+      "sha": "d5a5f27abe2c",
+      "sizeBytes": 748,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/d5a5f27abe2c.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1740.0.png",
+      "type": "past",
+      "time": 1789494000,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1745.0.png",
+      "type": "past",
+      "time": 1789494300,
+      "leadMin": 0,
+      "sha": "6967ba683c72",
+      "sizeBytes": 735,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/6967ba683c72.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1750.0.png",
+      "type": "past",
+      "time": 1789494600,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1755.0.png",
+      "type": "past",
+      "time": 1789494900,
+      "leadMin": 0,
+      "sha": "d67d4223bcc6",
+      "sizeBytes": 755,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/d67d4223bcc6.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1800.0.png",
+      "type": "past",
+      "time": 1789495200,
+      "leadMin": 0,
+      "sha": "9efea6cc1b2f",
+      "sizeBytes": 737,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/9efea6cc1b2f.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1805.0.png",
+      "type": "past",
+      "time": 1789495500,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1810.0.png",
+      "type": "past",
+      "time": 1789495800,
+      "leadMin": 0,
+      "sha": "689529fbf129",
+      "sizeBytes": 781,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/689529fbf129.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1815.0.png",
+      "type": "past",
+      "time": 1789496100,
+      "leadMin": 0,
+      "sha": "393ff7e5260d",
+      "sizeBytes": 768,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/393ff7e5260d.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1820.0.png",
+      "type": "past",
+      "time": 1789496400,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1825.0.png",
+      "type": "past",
+      "time": 1789496700,
+      "leadMin": 0,
+      "sha": "48976e3dd0a3",
+      "sizeBytes": 743,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/48976e3dd0a3.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1830.0.png",
+      "type": "past",
+      "time": 1789497000,
+      "leadMin": 0,
+      "sha": "f3d808dacac4",
+      "sizeBytes": 757,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/f3d808dacac4.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1835.0.png",
+      "type": "past",
+      "time": 1789497300,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1840.0.png",
+      "type": "past",
+      "time": 1789497600,
+      "leadMin": 0,
+      "sha": "7446b7043961",
+      "sizeBytes": 743,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/7446b7043961.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1845.0.png",
+      "type": "past",
+      "time": 1789497900,
+      "leadMin": 0,
+      "sha": "330b12030f49",
+      "sizeBytes": 763,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/330b12030f49.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1850.0.png",
+      "type": "past",
+      "time": 1789498200,
+      "leadMin": 0,
+      "sha": "5211c5032d41",
+      "sizeBytes": 740,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/5211c5032d41.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1855.0.png",
+      "type": "past",
+      "time": 1789498500,
+      "leadMin": 0,
+      "sha": "8f33812ac0e0",
+      "sizeBytes": 742,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/8f33812ac0e0.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1900.0.png",
+      "type": "past",
+      "time": 1789498800,
+      "leadMin": 0,
+      "sha": "7dcdf15100a7",
+      "sizeBytes": 747,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/7dcdf15100a7.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1905.0.png",
+      "type": "past",
+      "time": 1789499100,
+      "leadMin": 0,
+      "sha": "65d0a865d585",
+      "sizeBytes": 744,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/65d0a865d585.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1910.0.png",
+      "type": "past",
+      "time": 1789499400,
+      "leadMin": 0,
+      "sha": "7be477ee35b8",
+      "sizeBytes": 759,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/7be477ee35b8.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1915.0.png",
+      "type": "past",
+      "time": 1789499700,
+      "leadMin": 0,
+      "sha": "40b6db1b4286",
+      "sizeBytes": 748,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/40b6db1b4286.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1920.0.png",
+      "type": "past",
+      "time": 1789500000,
+      "leadMin": 0,
+      "sha": "324394f0942f",
+      "sizeBytes": 743,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/324394f0942f.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1925.0.png",
+      "type": "past",
+      "time": 1789500300,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1930.0.png",
+      "type": "past",
+      "time": 1789500600,
+      "leadMin": 0,
+      "sha": "d59466878fbd",
+      "sizeBytes": 751,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/d59466878fbd.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1935.0.png",
+      "type": "past",
+      "time": 1789500900,
+      "leadMin": 0,
+      "sha": "3ca575d75f99",
+      "sizeBytes": 747,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/3ca575d75f99.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1940.0.png",
+      "type": "past",
+      "time": 1789501200,
+      "leadMin": 0,
+      "sha": "9fa65f3a68fd",
+      "sizeBytes": 748,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/9fa65f3a68fd.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1945.0.png",
+      "type": "past",
+      "time": 1789501500,
+      "leadMin": 0,
+      "sha": "abd0fd80f285",
+      "sizeBytes": 733,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/abd0fd80f285.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1950.0.png",
+      "type": "past",
+      "time": 1789501800,
+      "leadMin": 0,
+      "sha": "ece8d02066cb",
+      "sizeBytes": 736,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/ece8d02066cb.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.1955.0.png",
+      "type": "past",
+      "time": 1789502100,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2000.0.png",
+      "type": "past",
+      "time": 1789502400,
+      "leadMin": 0,
+      "sha": "c5aaec040469",
+      "sizeBytes": 731,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/c5aaec040469.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2005.0.png",
+      "type": "past",
+      "time": 1789502700,
+      "leadMin": 0,
+      "sha": "26a0e3968310",
+      "sizeBytes": 775,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/26a0e3968310.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2010.0.png",
+      "type": "past",
+      "time": 1789503000,
+      "leadMin": 0,
+      "sha": "53e83938b600",
+      "sizeBytes": 731,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/53e83938b600.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2015.0.png",
+      "type": "past",
+      "time": 1789503300,
+      "leadMin": 0,
+      "sha": "061386daab9f",
+      "sizeBytes": 731,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/061386daab9f.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2020.0.png",
+      "type": "past",
+      "time": 1789503600,
+      "leadMin": 0,
+      "sha": "9eb5ce3bf9e0",
+      "sizeBytes": 744,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/9eb5ce3bf9e0.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2025.0.png",
+      "type": "past",
+      "time": 1789503900,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2030.0.png",
+      "type": "past",
+      "time": 1789504200,
+      "leadMin": 0,
+      "sha": "30154c4491f7",
+      "sizeBytes": 739,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/30154c4491f7.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2035.0.png",
+      "type": "past",
+      "time": 1789504500,
+      "leadMin": 0,
+      "sha": "d9b041af6971",
+      "sizeBytes": 741,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/d9b041af6971.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2040.0.png",
+      "type": "past",
+      "time": 1789504800,
+      "leadMin": 0,
+      "sha": "a2dd19cd021e",
+      "sizeBytes": 737,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/a2dd19cd021e.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2045.0.png",
+      "type": "past",
+      "time": 1789505100,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2050.0.png",
+      "type": "past",
+      "time": 1789505400,
+      "leadMin": 0,
+      "sha": "dc29d4a1d25f",
+      "sizeBytes": 745,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/dc29d4a1d25f.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2055.0.png",
+      "type": "past",
+      "time": 1789505700,
+      "leadMin": 0,
+      "sha": "413814e48035",
+      "sizeBytes": 732,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/413814e48035.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2100.0.png",
+      "type": "past",
+      "time": 1789506000,
+      "leadMin": 0,
+      "sha": "5881ceca18ff",
+      "sizeBytes": 748,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/5881ceca18ff.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2105.0.png",
+      "type": "past",
+      "time": 1789506300,
+      "leadMin": 0,
+      "sha": "953894b2a94c",
+      "sizeBytes": 731,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/953894b2a94c.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2110.0.png",
+      "type": "past",
+      "time": 1789506600,
+      "leadMin": 0,
+      "sha": "dc8264f36f66",
+      "sizeBytes": 754,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/dc8264f36f66.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2115.0.png",
+      "type": "past",
+      "time": 1789506900,
+      "leadMin": 0,
+      "sha": "f431f279126b",
+      "sizeBytes": 751,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/f431f279126b.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2120.0.png",
+      "type": "past",
+      "time": 1789507200,
+      "leadMin": 0,
+      "sha": "ad67b59362be",
+      "sizeBytes": 735,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/ad67b59362be.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2125.0.png",
+      "type": "past",
+      "time": 1789507500,
+      "leadMin": 0,
+      "sha": "7ba8c95cf7d4",
+      "sizeBytes": 733,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/7ba8c95cf7d4.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2130.0.png",
+      "type": "past",
+      "time": 1789507800,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2135.0.png",
+      "type": "past",
+      "time": 1789508100,
+      "leadMin": 0,
+      "sha": "dd9bc81b1b2d",
+      "sizeBytes": 735,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/dd9bc81b1b2d.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2140.0.png",
+      "type": "past",
+      "time": 1789508400,
+      "leadMin": 0,
+      "sha": "8db635707205",
+      "sizeBytes": 737,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/8db635707205.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2145.0.png",
+      "type": "past",
+      "time": 1789508700,
+      "leadMin": 0,
+      "sha": "e3b40a0da595",
+      "sizeBytes": 731,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/e3b40a0da595.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2150.0.png",
+      "type": "past",
+      "time": 1789509000,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2155.0.png",
+      "type": "past",
+      "time": 1789509300,
+      "leadMin": 0,
+      "sha": "62c855242f67",
+      "sizeBytes": 735,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/62c855242f67.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2200.0.png",
+      "type": "past",
+      "time": 1789509600,
+      "leadMin": 0,
+      "sha": "b6fbf86e4ec1",
+      "sizeBytes": 750,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/b6fbf86e4ec1.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2205.0.png",
+      "type": "past",
+      "time": 1789509900,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2210.0.png",
+      "type": "past",
+      "time": 1789510200,
+      "leadMin": 0,
+      "sha": "4c152af3b2a0",
+      "sizeBytes": 754,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/4c152af3b2a0.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2215.0.png",
+      "type": "past",
+      "time": 1789510500,
+      "leadMin": 0,
+      "sha": "f12f9a0e0c2c",
+      "sizeBytes": 732,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/f12f9a0e0c2c.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2220.0.png",
+      "type": "past",
+      "time": 1789510800,
+      "leadMin": 0,
+      "sha": "584dc9394103",
+      "sizeBytes": 744,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/584dc9394103.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2225.0.png",
+      "type": "past",
+      "time": 1789511100,
+      "leadMin": 0,
+      "sha": "c36c1c436e46",
+      "sizeBytes": 732,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/c36c1c436e46.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2230.0.png",
+      "type": "past",
+      "time": 1789511400,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2235.0.png",
+      "type": "past",
+      "time": 1789511700,
+      "leadMin": 0,
+      "sha": "66a9e18919b9",
+      "sizeBytes": 731,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/66a9e18919b9.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2240.0.png",
+      "type": "past",
+      "time": 1789512000,
+      "leadMin": 0,
+      "sha": "655101780dc7",
+      "sizeBytes": 735,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/655101780dc7.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2245.0.png",
+      "type": "past",
+      "time": 1789512300,
+      "leadMin": 0,
+      "sha": "b34aefcfab0f",
+      "sizeBytes": 737,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/b34aefcfab0f.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2250.0.png",
+      "type": "past",
+      "time": 1789512600,
+      "leadMin": 0,
+      "sha": "88e7eeaa3c96",
+      "sizeBytes": 737,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/88e7eeaa3c96.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2255.0.png",
+      "type": "past",
+      "time": 1789512900,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2300.0.png",
+      "type": "past",
+      "time": 1789513200,
+      "leadMin": 0,
+      "sha": "c36c1c436e46",
+      "sizeBytes": 732,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/c36c1c436e46.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2305.0.png",
+      "type": "past",
+      "time": 1789513500,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2310.0.png",
+      "type": "past",
+      "time": 1789513800,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2315.0.png",
+      "type": "past",
+      "time": 1789514100,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2320.0.png",
+      "type": "past",
+      "time": 1789514400,
+      "leadMin": 0,
+      "sha": "bbb7afc17e2e",
+      "sizeBytes": 745,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/bbb7afc17e2e.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2325.0.png",
+      "type": "past",
+      "time": 1789514700,
+      "leadMin": 0,
+      "sha": "2251b84ef995",
+      "sizeBytes": 731,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/2251b84ef995.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2330.0.png",
+      "type": "past",
+      "time": 1789515000,
+      "leadMin": 0,
+      "sha": "d27f75ee398e",
+      "sizeBytes": 740,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/d27f75ee398e.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2335.0.png",
+      "type": "past",
+      "time": 1789515300,
+      "leadMin": 0,
+      "sha": "765c6a33bc9d",
+      "sizeBytes": 738,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/765c6a33bc9d.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2340.0.png",
+      "type": "past",
+      "time": 1789515600,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2345.0.png",
+      "type": "past",
+      "time": 1789515900,
+      "leadMin": 0,
+      "sha": "e9c15e433f66",
+      "sizeBytes": 735,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/e9c15e433f66.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.z_cappi020.20260915.2350.0.png",
+      "type": "past",
+      "time": 1789516200,
+      "leadMin": 0,
+      "sha": "027e7411e059",
+      "sizeBytes": 730,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/027e7411e059.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.fct_z_cappi020.20260916.0000.10.png",
+      "type": "nowcast",
+      "time": 1789516800,
+      "leadMin": 10,
+      "sha": "ec9e78a32fa9",
+      "sizeBytes": 762,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/ec9e78a32fa9.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.fct_z_cappi020.20260916.0010.20.png",
+      "type": "nowcast",
+      "time": 1789517400,
+      "leadMin": 20,
+      "sha": "ec9e78a32fa9",
+      "sizeBytes": 762,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/ec9e78a32fa9.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.fct_z_cappi020.20260916.0020.30.png",
+      "type": "nowcast",
+      "time": 1789518000,
+      "leadMin": 30,
+      "sha": "ec9e78a32fa9",
+      "sizeBytes": 762,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/ec9e78a32fa9.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.fct_z_cappi020.20260916.0030.40.png",
+      "type": "nowcast",
+      "time": 1789518600,
+      "leadMin": 40,
+      "sha": "ec9e78a32fa9",
+      "sizeBytes": 762,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/ec9e78a32fa9.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.fct_z_cappi020.20260916.0040.50.png",
+      "type": "nowcast",
+      "time": 1789519200,
+      "leadMin": 50,
+      "sha": "ec9e78a32fa9",
+      "sizeBytes": 762,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/ec9e78a32fa9.png"
+    },
+    {
+      "sourceName": "pacz2gmaps3.fct_z_cappi020.20260916.0050.60.png",
+      "type": "nowcast",
+      "time": 1789519800,
+      "leadMin": 60,
+      "sha": "ec9e78a32fa9",
+      "sizeBytes": 762,
+      "url": "https://cdn.jsdelivr.net/gh/karel008-sudo/StormScope@chmi-data/frames/ec9e78a32fa9.png"
+    }
+  ],
+  "source": {
+    "pseudocappi": "https://opendata.chmi.cz/meteorology/weather/radar/composite/pseudocappi2km/",
+    "forecast": "https://opendata.chmi.cz/meteorology/weather/radar/composite/fct_pseudocappi2km/",
+    "attribution": "© ČHMÚ",
+    "license": "Czech Hydrometeorological Institute open data (https://opendata.chmi.cz/)"
+  },
+  "poller": {
+    "version": "1.0.0",
+    "startedAt": 1789516417,
+    "durationSeconds": 17
+  }
+}
